@@ -1,0 +1,18 @@
+Select Arduino UNO as the controller type.
+
+The Bluetooth on the controller is 4.0BLE, and in the main mode, it will automatically connect to the BLE bdevice.
+
+If the Bluetooth 2.0 or the one needing pin code is adopted, the code needs to be modified. If you want to connect to the other device after the first connection, press the DEL button and restart.
+
+STA indicator status
+When the host doesn't record the bdevice address, it lights up for 100ms every second.
+When the host records the bdevice address, it lights up for 900ms every second.
+The bdevice will light up for 1 second every 2 seconds.
+
+After the program is downloaded, please wear a pair of gloves, and palm down, make a fist and lay flat. Power on the gloves and wait until the 5 LED lights in the middle flash several times. Then open your palm.
+Wait for a while, and the initialization is completed when the middle 5 LEDs flash for a few more flashes.
+After the initialization, you can switch to work mode by pressing key3. It is in spider robot control mode when all the LED lights are off. It is in hand control mode when one LED light is on. It is in robot car control mode when two LED light is on.  It is in robot arm control mode when three LED lights are on.
+
+
+
+
