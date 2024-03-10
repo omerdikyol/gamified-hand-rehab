@@ -22,8 +22,8 @@ public class GloveController : MonoBehaviour
     private float[] tempCalibrationValues = new float[5]; // Temporary storage for calibration values
     private Vector3 initialPosition;  // Store the initial position of the model
     private Quaternion initialRotation; // Store the initial rotation of the model
-    public float deadzoneThreshold = 0.03f; // Threshold for accelerometer and gyroscope deadzone
-    public float qw, qx, qy, qz; // Quaternion values for the model rotation
+    private float qw, qx, qy, qz; // Quaternion values for the model rotation
+    private float[] fingerNormalizedValues = new float[5]; // Normalized finger values
 
 
     void Start()
@@ -75,12 +75,6 @@ public class GloveController : MonoBehaviour
             qy = float.Parse(values[2]);
             qz = float.Parse(values[3]);
 
-            // Ignore if the IMU data is within the deadzone
-            if (Mathf.Abs(qw) < deadzoneThreshold && Mathf.Abs(qx) < deadzoneThreshold && Mathf.Abs(qy) < deadzoneThreshold && Mathf.Abs(qz) < deadzoneThreshold)
-            {
-                return;
-            }
-
             // Apply the quaternion values to the model (Rotate the model based on the IMU data)
             transform.rotation = new Quaternion(qx, qz, qy, -qw);
 
@@ -89,6 +83,7 @@ public class GloveController : MonoBehaviour
             {
                 // float normalizedValue = MapValueToRange(float.Parse(values[6 + i]), 0, 1023, 90, 0); // Without calibration
                 float normalizedValue = MapValueToRange(float.Parse(values[4 + i]), fingerMinValues[i], fingerMaxValues[i], 85, 5); // With calibration
+                fingerNormalizedValues[i] = normalizedValue;
                 // Debug.Log("Finger " + i + " value: " + normalizedValue);
                 switch(i)
                 {
@@ -240,5 +235,26 @@ public class GloveController : MonoBehaviour
         {
             serialPort.Close();
         }
+    }
+
+    public bool GetIsCalibrated()
+    {
+        return isCalibrated;
+    }
+
+    public float[] GetQuaternionValues()
+    {
+        float[] quaternionValues = new float[4];
+        quaternionValues[0] = qw;
+        quaternionValues[1] = qx;
+        quaternionValues[2] = qy;
+        quaternionValues[3] = qz;
+
+        return quaternionValues;
+    }
+
+    public float[] GetFingerValues()
+    {
+        return fingerNormalizedValues;
     }
 }
