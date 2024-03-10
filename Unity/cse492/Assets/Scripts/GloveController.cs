@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GloveController : MonoBehaviour
 {
-    public string portName = "COM8";
+    public string portName = "COM3";
     public int baudRate = 9600;
     private SerialPort serialPort;
 
@@ -16,13 +16,24 @@ public class GloveController : MonoBehaviour
     public Transform[] ringJoints;
     public Transform[] pinkyJoints;
 
-    private float[] minValues = new float[5]; // Minimum calibration values for fingers
-    private float[] maxValues = new float[5]; // Maximum calibration values for fingers
-    private float[] tempCalibrationValues = new float[5]; // Temporary storage for calibration values
     private bool isCalibrated = false; // Track if the system has been calibrated
+    private float[] fingerMinValues = new float[5]; // Minimum calibration values for fingers
+    private float[] fingerMaxValues = new float[5]; // Maximum calibration values for fingers
+    private float[] tempCalibrationValues = new float[5]; // Temporary storage for calibration values
+    private Vector3 initialPosition;  // Store the initial position of the model
+    private Quaternion initialRotation; // Store the initial rotation of the model
+    public float deadzoneThreshold = 0.03f; // Threshold for accelerometer and gyroscope deadzone
+    public float qw, qx, qy, qz; // Quaternion values for the model rotation
+
 
     void Start()
     {
+        initialPosition = transform.position;
+        initialRotation = transform.rotation;
+
+        Debug.Log("Initial position: " + initialPosition);
+        Debug.Log("Initial rotation: " + initialRotation);
+
         serialPort = new SerialPort(portName, baudRate);
         try
         {
@@ -55,25 +66,30 @@ public class GloveController : MonoBehaviour
     void ParseData(string data)
     {
         string[] values = data.Split(',');
-        if (values.Length >= 11) // 6 for IMU data and 5 for finger data
-        {
-            // Parse the IMU data
-            float ax = float.Parse(values[0]);
-            float ay = float.Parse(values[1]);
-            float az = float.Parse(values[2]);
-            float gx = float.Parse(values[3]);
-            float gy = float.Parse(values[4]);
-            float gz = float.Parse(values[5]);
 
-            // Use the parsed data
-            Debug.Log($"Accelerometer: {ax}, {ay}, {az} | Gyroscope: {gx}, {gy}, {gz}");
+        if (values.Length >= 9) // 4 for IMU data and 5 for finger data
+        {
+            // Parse the IMU data (accelerometer and gyroscope)
+            qw = float.Parse(values[0]);
+            qx = float.Parse(values[1]);
+            qy = float.Parse(values[2]);
+            qz = float.Parse(values[3]);
+
+            // Ignore if the IMU data is within the deadzone
+            if (Mathf.Abs(qw) < deadzoneThreshold && Mathf.Abs(qx) < deadzoneThreshold && Mathf.Abs(qy) < deadzoneThreshold && Mathf.Abs(qz) < deadzoneThreshold)
+            {
+                return;
+            }
+
+            // Apply the quaternion values to the model (Rotate the model based on the IMU data)
+            transform.rotation = new Quaternion(qx, qz, qy, -qw);
 
             // Parse finger potentiometer values
             for (int i = 0; i < 5; i++)
             {
                 // float normalizedValue = MapValueToRange(float.Parse(values[6 + i]), 0, 1023, 90, 0); // Without calibration
-                float normalizedValue = MapValueToRange(float.Parse(values[6 + i]), minValues[i], maxValues[i], 85, 5); // With calibration
-                Debug.Log("Finger " + i + " value: " + normalizedValue);
+                float normalizedValue = MapValueToRange(float.Parse(values[4 + i]), fingerMinValues[i], fingerMaxValues[i], 85, 5); // With calibration
+                // Debug.Log("Finger " + i + " value: " + normalizedValue);
                 switch(i)
                 {
                     case 0:
@@ -108,49 +124,40 @@ public class GloveController : MonoBehaviour
         for (int i = 0; i < fingerJoints.Length; i++)
         {
             // Clamp the joint rotation to avoid unrealistic movement
-            float clampedRotation = Mathf.Clamp(jointRotations[i], 0, 180);
+            float clampedRotation = Mathf.Clamp(jointRotations[i], -10, 190); // previously 0, 180
             
             // Assuming the fingers rotate around their local Z-axis
             fingerJoints[i].localEulerAngles = new Vector3(fingerJoints[i].localEulerAngles.x, fingerJoints[i].localEulerAngles.y, -clampedRotation);
         }
     }
 
-    // // Direct approach for finger rotation
-    // void RotateFinger(Transform[] fingerJoints, float angle)
-    // {
-    //     // Adjust these based on your model's rotation limits and joint configurations
-    //     float[] jointRotations = CalculateJointRotations(angle, fingerJoints.Length);
-
-    //     for (int i = 0; i < fingerJoints.Length; i++)
-    //     {
-    //         // Assuming the fingers rotate around their local X-axis
-    //         fingerJoints[i].localEulerAngles = new Vector3(0f, 0f, -jointRotations[i]);
-    //     }
-    // }
-
     private IEnumerator StartCalibrationRoutine()
     {
+        Debug.Log("Starting calibration...");
+        yield return new WaitForSeconds(15f); // Wait for the initial calibration of MPU6050 (can be modified at arduino code maybe)
+
+        // Finger calibration is done in two parts: first, the user makes a fist, then opens their hand
         Debug.Log("Calibration start (Part 1): Make a fist.");
         
         yield return new WaitForSeconds(2f);
-        yield return StartCoroutine(ReadCalibrationValues(true)); // true for min values
+        yield return StartCoroutine(ReadFingerCalibrationValues(true)); // true for min values
         yield return new WaitForSeconds(5f);
 
         Debug.Log("Calibration start (Part 2): Open your hand.");
         yield return new WaitForSeconds(2f);
-        yield return StartCoroutine(ReadCalibrationValues(false)); // false for max values
-
-        isCalibrated = true;
-        Debug.Log("Calibration completed.");
+        yield return StartCoroutine(ReadFingerCalibrationValues(false)); // false for max values
 
         // Optionally, log the min and max values for each finger
         for (int i = 0; i < 5; i++)
         {
-            Debug.Log($"Finger {i} min: {minValues[i]}, max: {maxValues[i]}");
+            Debug.Log($"Finger {i} min: {fingerMinValues[i]}, max: {fingerMaxValues[i]}");
         }
+
+        isCalibrated = true;
+        Debug.Log("Calibration completed.");
     }
 
-    private IEnumerator ReadCalibrationValues(bool isReadingMinValues)
+    private IEnumerator ReadFingerCalibrationValues(bool isReadingMinValues)
     {
         float[] sumValues = new float[5];
         int readingsCount = 0;
@@ -162,9 +169,18 @@ public class GloveController : MonoBehaviour
             {
                 string dataString = serialPort.ReadLine();
                 string[] values = dataString.Split(',');
+
+                // Sum the values for each finger
                 for (int i = 0; i < 5; i++)
                 {
-                    sumValues[i] += float.Parse(values[6 + i]); // Adjust index based on your data format
+                    // If the data is not in the expected format, skip the current iteration
+                    try {
+                        sumValues[i] += float.Parse(values[4 + i]); // Adjust index based on your data format
+                    } catch (Exception e)
+                    {
+                        Debug.LogError("Error parsing data: " + e.Message);
+                        continue;
+                    }
                 }
                 readingsCount++;
             }
@@ -180,11 +196,11 @@ public class GloveController : MonoBehaviour
         // Assign the averaged values to the appropriate calibration array
         if (isReadingMinValues)
         {
-            minValues = (float[])tempCalibrationValues.Clone();
+            fingerMinValues = (float[])tempCalibrationValues.Clone();
         }
         else
         {
-            maxValues = (float[])tempCalibrationValues.Clone();
+            fingerMaxValues = (float[])tempCalibrationValues.Clone();
         }
 
         Debug.Log("Calibration values read.");

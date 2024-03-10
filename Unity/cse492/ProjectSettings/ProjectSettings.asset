@@ -678,7 +678,7 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: cse492
-  metroPackageVersion: 
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -686,7 +686,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: cse492
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: cse492
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
