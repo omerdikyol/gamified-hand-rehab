@@ -22,6 +22,7 @@ public class GloveController : MonoBehaviour
     private float[] tempCalibrationValues = new float[5]; // Temporary storage for calibration values
     private Vector3 initialPosition;  // Store the initial position of the model
     private Quaternion initialRotation; // Store the initial rotation of the model
+    public float quaternionThreshold = 0.05f; // Threshold for avoiding the unnecessary rotation of the hand model
     private float qw, qx, qy, qz; // Quaternion values for the model rotation
     private float[] fingerNormalizedValues = new float[5]; // Normalized finger values
 
@@ -74,6 +75,12 @@ public class GloveController : MonoBehaviour
             qx = float.Parse(values[1]);
             qy = float.Parse(values[2]);
             qz = float.Parse(values[3]);
+
+            // Apply the threshold to the quaternion values
+            if (Mathf.Abs(qw) < quaternionThreshold) qw = 0;
+            if (Mathf.Abs(qx) < quaternionThreshold) qx = 0;
+            if (Mathf.Abs(qy) < quaternionThreshold) qy = 0;
+            if (Mathf.Abs(qz) < quaternionThreshold) qz = 0;
 
             // Apply the quaternion values to the model (Rotate the model based on the IMU data)
             transform.rotation = new Quaternion(qx, qz, qy, -qw);
@@ -256,5 +263,15 @@ public class GloveController : MonoBehaviour
     public float[] GetFingerValues()
     {
         return fingerNormalizedValues;
+    }
+
+    public float[] GetFingerMinValues()
+    {
+        return fingerMinValues;
+    }
+
+    public float[] GetFingerMaxValues()
+    {
+        return fingerMaxValues;
     }
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Define a class to represent hand states 
+// Class to represent hand states 
 public class HandState
 {
     public float[] quaternionValues;

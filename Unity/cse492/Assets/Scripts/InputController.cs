@@ -9,9 +9,13 @@ public class InputController : MonoBehaviour
     public GloveController gloveController;
 
     // List to store predefined hand states
-    public List<HandState> handStates = new List<HandState>();
-    public float quaternionThreshold = 0.04f; // Threshold for comparing quaternion values
-    public float fingerThreshold = 10; // Threshold for comparing finger values
+    private List<HandState> handStates = new List<HandState>();
+    public float quaternionThreshold = 0.08f; // Threshold for comparing quaternion values
+    public float fingerThreshold = 30f; // Threshold for comparing finger values
+
+    private float[] fingerMinValues; // Array to store the minimum finger values given by the GloveController
+    private float[] fingerMaxValues; // Array to store the maximum finger values given by the GloveController
+    public float minMaxThreshold = 60f; // Threshold for checking if a finger value is near the min or max value
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +30,14 @@ public class InputController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        // Get the finger min and max values from the GloveController for checking fingers that are closest to the min and max values
+        if (gloveController.GetIsCalibrated())
+        {
+            fingerMinValues = gloveController.GetFingerMinValues();
+            fingerMaxValues = gloveController.GetFingerMaxValues();
+        }
+
         // Check the current hand state
         CheckHandState();
 
@@ -83,72 +95,90 @@ public class InputController : MonoBehaviour
         // Compare quaternion values if the predefined state includes quaternion values
         if (predefinedState.includesQuaternion)
         {
-            bool isQuaternionMatching = true;
             for (int i = 0; i < currentState.quaternionValues.Length; i++)
             {
                 if (!FastApproximately(currentState.quaternionValues[i], predefinedState.quaternionValues[i], quaternionThreshold))
                 {
-                    isQuaternionMatching = false;
-                    break;
+                    return false; // Quaternion values do not match within the threshold
                 }
             }
-            if (!isQuaternionMatching)
-            {
-                return false;
-            }
         }
-        
+
         // Compare finger values if the predefined state includes finger values
         if (predefinedState.includesFingers)
         {
-            bool isFingerMatching = true;
             for (int i = 0; i < currentState.fingerValues.Length; i++)
             {
-                if (!FastApproximately(currentState.fingerValues[i], predefinedState.fingerValues[i], fingerThreshold))
+                // The comparison logic for finger values is adjusted to account for values beyond max/min thresholds
+                bool isCurrentNearMax = FastApproximately(currentState.fingerValues[i], fingerMaxValues[i], fingerThreshold);
+                bool isCurrentNearMin = FastApproximately(currentState.fingerValues[i], fingerMinValues[i], fingerThreshold);
+                bool isPredefinedNearMax = FastApproximately(predefinedState.fingerValues[i], fingerMaxValues[i], fingerThreshold);
+                bool isPredefinedNearMin = FastApproximately(predefinedState.fingerValues[i], fingerMinValues[i], fingerThreshold);
+
+                // Check if current and predefined states are near max or min and consider them matching in those cases
+                if ((isCurrentNearMax && isPredefinedNearMax) || (isCurrentNearMin && isPredefinedNearMin))
                 {
-                    isFingerMatching = false;
-                    break;
+                    // If both are near max or both are near min, consider this a match for the current finger
+                    continue;
                 }
-            }
-            if (!isFingerMatching)
-            {
-                return false;
+                else if (!FastApproximately(currentState.fingerValues[i], predefinedState.fingerValues[i], fingerThreshold))
+                {
+                    // If they are not near the extremes, they must be approximately equal within the threshold
+                    return false; // Finger values do not match within the threshold
+                }
             }
         }
 
-        // Return true if both quaternion values and finger values match
-        return true;
+        return true; // All compared values match within their respective thresholds
     }
 
-    // The adjusted coroutine to collect data based on flags for what to include
+    // Function to collect and add a hand state to the list
     private IEnumerator CollectAndAddHandState(bool includeQuaternion, bool includeFingers)
     {
+        // Immediate feedback to ensure the coroutine has started
+        Debug.Log("Coroutine started. Collecting hand state for 5 seconds. Include quaternion: " + includeQuaternion + ", Include fingers: " + includeFingers);
+
         if (gloveController != null && gloveController.GetIsCalibrated())
         {
             List<float[]> quaternionValuesList = new List<float[]>();
             List<float[]> fingerValuesList = new List<float[]>();
 
-            Debug.Log("Collecting hand state for 5 seconds. Include quaternion: " + includeQuaternion + ", Include fingers: " + includeFingers);
-
             float startTime = Time.time;
-            while (Time.time - startTime < 5f) // Collect data for 5 seconds
+            float endTime = startTime + 5f; // Collect data for 5 seconds
+
+            while (Time.time < endTime)
             {
-                if (includeQuaternion) quaternionValuesList.Add(gloveController.GetQuaternionValues());
-                if (includeFingers) fingerValuesList.Add(gloveController.GetFingerValues());
-                yield return null; // Wait for the next frame
+                // Efficient Data Collection
+                if (includeQuaternion)
+                {
+                    quaternionValuesList.Add(gloveController.GetQuaternionValues());
+                }
+                if (includeFingers)
+                {
+                    fingerValuesList.Add(gloveController.GetFingerValues());
+                }
+
+                // Spread Computation by yielding for the next frame
+                yield return null;
             }
 
             // Compute the mean of the collected values
-            float[] meanQuaternion = ComputeMean(quaternionValuesList);
-            float[] meanFingerValues = ComputeMean(fingerValuesList);
+            float[] meanQuaternion = includeQuaternion ? ComputeMean(quaternionValuesList) : new float[0];
+            float[] meanFingerValues = includeFingers ? ComputeMean(fingerValuesList) : new float[0];
 
             // Add the new hand state
             HandState newHandState = new HandState(meanQuaternion, meanFingerValues, includeQuaternion, includeFingers);
             handStates.Add(newHandState);
-            Debug.Log("Added new hand state with averaged values.");
+            
+            Debug.Log("Coroutine ended. Hand state added.");
+        }
+        else
+        {
+            Debug.Log("GloveController is not calibrated or available.");
         }
     }
 
+    // Function to compute the mean of a list of float arrays
     private float[] ComputeMean(List<float[]> valuesList)
     {
         if (valuesList.Count == 0)
@@ -171,9 +201,8 @@ public class InputController : MonoBehaviour
         return meanValues;
     }
 
-    // Function to compare two float values with a threshold
     public static bool FastApproximately(float a, float b, float threshold)
     {
-        return ((a - b) < 0 ? ((a - b) * -1) : (a - b)) <= threshold;
+        return Mathf.Abs(a - b) <= threshold;
     }
 }
