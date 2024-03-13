@@ -17,14 +17,17 @@ public class InputController : MonoBehaviour
     private float[] fingerMaxValues; // Array to store the maximum finger values given by the GloveController
     public float minMaxThreshold = 60f; // Threshold for checking if a finger value is near the min or max value
 
+    private const int IncludeQx = 1; // 0001 in binary
+    private const int IncludeQy = 2; // 0010 in binary
+    private const int IncludeQz = 4; // 0100 in binary
+    private const int IncludeQw = 8; // 1000 in binary
+
     // Start is called before the first frame update
     void Start()
     {
         // Add predefined hand states and their associated values to the list (example values)
-        // AddHandState(new HandState(new float[] {0.99f, 0.01f, -0.01f, -0.17f}, new float[] { 604, 402, 359, 441, 520 }));
-        // AddHandState(new HandState(new float[] {0.99f, 0.00f, -0.01f, -0.17f}, new float[] { 607, 400, 360, 442, 532 }));
-        // AddHandState(new HandState(new float[] {0.99f, 0.00f, -0.01f, -0.15f}, new float[] { 610, 399, 360, 442, 545 }));
-        // AddHandState(new HandState(new float[] {0.99f, 0.00f, -0.01f, -0.14f}, new float[] { 612, 399, 360, 442, 558 }));
+        // int includedComponents = IncludeQx | IncludeQz; // Assuming constants are defined as before
+        // AddHandState(new HandState(new float[] {0, 0.01f, 0, -0.17f}, new float[] { 604, 402, 359, 441, 520 }, true, true, includedComponents));
     }
 
     // Update is called once per frame
@@ -41,20 +44,36 @@ public class InputController : MonoBehaviour
         // Check the current hand state
         CheckHandState();
 
-        // Check for a A key press to collect and add a hand state
         // Different keys for different types of data capture
-        if (Input.GetKeyDown(KeyCode.A)) // Full hand state
+        if (Input.GetKeyDown(KeyCode.Alpha1)) // Full hand state
         {
-            StartCoroutine(CollectAndAddHandState(true, true));
+            StartCoroutine(CollectAndAddHandState(true, true, 15)); // Assuming 15 includes all quaternion components
         }
-        if (Input.GetKeyDown(KeyCode.S)) // Only finger values
+        if (Input.GetKeyDown(KeyCode.Alpha2)) // Only finger values
         {
-            StartCoroutine(CollectAndAddHandState(false, true));
+            StartCoroutine(CollectAndAddHandState(false, true, 0)); // Quaternion components not included
         }
-        if (Input.GetKeyDown(KeyCode.D)) // Only hand rotation
+        if (Input.GetKeyDown(KeyCode.Alpha3)) // Only hand rotation
         {
-            StartCoroutine(CollectAndAddHandState(true, false));
+            StartCoroutine(CollectAndAddHandState(true, false, 15)); // Including all quaternion components
         }
+        if (Input.GetKeyDown(KeyCode.Alpha4)) // Only qx 
+        {
+            StartCoroutine(CollectAndAddHandState(true, true, IncludeQx));
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha5)) // Only qy
+        {
+            StartCoroutine(CollectAndAddHandState(true, true, IncludeQy));
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha6)) // Only qz
+        {
+            StartCoroutine(CollectAndAddHandState(true, true, IncludeQz));
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha7)) // Only qw
+        { 
+            StartCoroutine(CollectAndAddHandState(true, true, IncludeQw));
+        }
+
     }
 
     // Function to add a hand state to the list 
@@ -92,14 +111,18 @@ public class InputController : MonoBehaviour
     // Function to compare two hand states
     private bool IsMatchingState(HandState currentState, HandState predefinedState)
     {
-        // Compare quaternion values if the predefined state includes quaternion values
+        // Compare quaternion values if included
         if (predefinedState.includesQuaternion)
         {
             for (int i = 0; i < currentState.quaternionValues.Length; i++)
             {
-                if (!FastApproximately(currentState.quaternionValues[i], predefinedState.quaternionValues[i], quaternionThreshold))
+                // Check if this component should be considered
+                if ((predefinedState.includedQuaternionComponents & (1 << i)) != 0)
                 {
-                    return false; // Quaternion values do not match within the threshold
+                    if (!FastApproximately(currentState.quaternionValues[i], predefinedState.quaternionValues[i], quaternionThreshold))
+                    {
+                        return false; // This quaternion component does not match
+                    }
                 }
             }
         }
@@ -133,10 +156,9 @@ public class InputController : MonoBehaviour
     }
 
     // Function to collect and add a hand state to the list
-    private IEnumerator CollectAndAddHandState(bool includeQuaternion, bool includeFingers)
+    private IEnumerator CollectAndAddHandState(bool includeQuaternion, bool includeFingers, int quaternionComponents)
     {
-        // Immediate feedback to ensure the coroutine has started
-        Debug.Log("Coroutine started. Collecting hand state for 5 seconds. Include quaternion: " + includeQuaternion + ", Include fingers: " + includeFingers);
+        Debug.Log("Coroutine started. Collecting hand state for 5 seconds.");
 
         if (gloveController != null && gloveController.GetIsCalibrated())
         {
@@ -148,28 +170,32 @@ public class InputController : MonoBehaviour
 
             while (Time.time < endTime)
             {
-                // Efficient Data Collection
                 if (includeQuaternion)
                 {
-                    quaternionValuesList.Add(gloveController.GetQuaternionValues());
+                    float[] currentQuaternionValues = gloveController.GetQuaternionValues();
+                    float[] selectedQuaternionValues = new float[4]; // Always size 4, but will zero out non-selected components
+                    
+                    if ((quaternionComponents & IncludeQx) != 0) selectedQuaternionValues[1] = currentQuaternionValues[1]; // qx
+                    if ((quaternionComponents & IncludeQy) != 0) selectedQuaternionValues[2] = currentQuaternionValues[2]; // qy
+                    if ((quaternionComponents & IncludeQz) != 0) selectedQuaternionValues[3] = currentQuaternionValues[3]; // qz
+                    if ((quaternionComponents & IncludeQw) != 0) selectedQuaternionValues[0] = currentQuaternionValues[0]; // qw
+                    
+                    quaternionValuesList.Add(selectedQuaternionValues);
                 }
                 if (includeFingers)
                 {
                     fingerValuesList.Add(gloveController.GetFingerValues());
                 }
 
-                // Spread Computation by yielding for the next frame
-                yield return null;
+                yield return null; // Wait for the next frame
             }
 
-            // Compute the mean of the collected values
             float[] meanQuaternion = includeQuaternion ? ComputeMean(quaternionValuesList) : new float[0];
             float[] meanFingerValues = includeFingers ? ComputeMean(fingerValuesList) : new float[0];
 
-            // Add the new hand state
             HandState newHandState = new HandState(meanQuaternion, meanFingerValues, includeQuaternion, includeFingers);
             handStates.Add(newHandState);
-            
+
             Debug.Log("Coroutine ended. Hand state added.");
         }
         else

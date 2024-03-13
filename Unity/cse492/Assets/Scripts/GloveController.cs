@@ -22,8 +22,10 @@ public class GloveController : MonoBehaviour
     private float[] tempCalibrationValues = new float[5]; // Temporary storage for calibration values
     private Vector3 initialPosition;  // Store the initial position of the model
     private Quaternion initialRotation; // Store the initial rotation of the model
-    public float quaternionThreshold = 0.05f; // Threshold for avoiding the unnecessary rotation of the hand model
+    public float quaternionThreshold = 0.03f; // Threshold for avoiding the unnecessary rotation of the hand model
     private float qw, qx, qy, qz; // Quaternion values for the model rotation
+    private float prevQw, prevQx, prevQy, prevQz; // Previous quaternion values
+    private float[] prevFingerValues = new float[5]; // Previous finger values
     private float[] fingerNormalizedValues = new float[5]; // Normalized finger values
 
 
@@ -70,20 +72,36 @@ public class GloveController : MonoBehaviour
 
         if (values.Length >= 9) // 4 for IMU data and 5 for finger data
         {
-            // Parse the IMU data (accelerometer and gyroscope)
-            qw = float.Parse(values[0]);
-            qx = float.Parse(values[1]);
-            qy = float.Parse(values[2]);
-            qz = float.Parse(values[3]);
+            // Parse the incoming IMU data
+            float tempQw = float.Parse(values[0]);
+            float tempQx = float.Parse(values[1]);
+            float tempQy = float.Parse(values[2]);
+            float tempQz = float.Parse(values[3]);
 
-            // Apply the threshold to the quaternion values
-            if (Mathf.Abs(qw) < quaternionThreshold) qw = 0;
-            if (Mathf.Abs(qx) < quaternionThreshold) qx = 0;
-            if (Mathf.Abs(qy) < quaternionThreshold) qy = 0;
-            if (Mathf.Abs(qz) < quaternionThreshold) qz = 0;
+            // Apply quaternion dead zone by comparing with previous values
+            if (Mathf.Abs(tempQw - prevQw) > quaternionThreshold || Mathf.Abs(tempQx - prevQx) > quaternionThreshold ||
+                Mathf.Abs(tempQy - prevQy) > quaternionThreshold || Mathf.Abs(tempQz - prevQz) > quaternionThreshold)
+            {
+                qw = tempQw;
+                qx = tempQx;
+                qy = tempQy;
+                qz = tempQz;
 
-            // Apply the quaternion values to the model (Rotate the model based on the IMU data)
-            transform.rotation = new Quaternion(qx, qz, qy, -qw);
+                // Update previous quaternion values
+                prevQw = qw;
+                prevQx = qx;
+                prevQy = qy;
+                prevQz = qz;
+
+                // If current rotation is close to the initial rotation, reset the rotation
+                if (Quaternion.Angle(initialRotation, transform.rotation) < 5f)
+                {
+                    transform.rotation = initialRotation;
+                }
+
+                // Apply the quaternion values to the model
+                transform.rotation = new Quaternion(qx, qz, qy, -qw);
+            }
 
             // Parse finger potentiometer values
             for (int i = 0; i < 5; i++)

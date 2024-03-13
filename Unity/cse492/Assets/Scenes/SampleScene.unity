@@ -401,6 +401,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HandRight
       objectReference: {fileID: 0}
+    - target: {fileID: 7357882499918218916, guid: fd6b9bbba50e34545997e0d09667aa85, type: 3}
+      propertyPath: quaternionThreshold
+      value: 0.03
+      objectReference: {fileID: 0}
     - target: {fileID: 7745693247778557427, guid: fd6b9bbba50e34545997e0d09667aa85, type: 3}
       propertyPath: m_LocalPosition.x
       value: 8.1328
