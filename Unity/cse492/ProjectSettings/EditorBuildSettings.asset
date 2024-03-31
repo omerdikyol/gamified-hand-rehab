@@ -4,5 +4,26 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: b2b00a3960e4c5d4eaf176eb897c4457
+  - enabled: 1
+    path: Assets/Scenes/Calibration.unity
+    guid: 260e7d383056b224291b972a61f3d5be
+  - enabled: 1
+    path: Assets/Scenes/GamesList.unity
+    guid: 9e3e29fb749f3634180f4172c347815c
+  - enabled: 1
+    path: Assets/Scenes/Games/BirdJump.unity
+    guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/Games/CoinRunner.unity
+    guid: f62dc84de4297c249a27b3cdc89f52c1
+  - enabled: 1
+    path: Assets/Scenes/Games/Glider.unity
+    guid: 21f396674cb61834ca6c5077d16414af
+  - enabled: 1
+    path: Assets/Scenes/Games/SpaceShooter.unity
+    guid: adbbbdc24b8364b42bfb2631a6ccc9bb
   m_configObjects: {}

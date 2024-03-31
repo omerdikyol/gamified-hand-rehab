@@ -3,7 +3,14 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Obstacle
+  - Scoring
+  - Bullet
+  - Asteroid
+  - Enemy
+  - Environ
+  - Hand
   layers:
   - Default
   - TransparentFX
@@ -12,8 +19,8 @@ TagManager:
   - Water
   - UI
   - Hand
-  - 
-  - 
+  - MenuUI
+  - HandUI
   - 
   - 
   - 
@@ -40,4 +47,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 1758421339
+    locked: 0
+  - name: Foreground
+    uniqueID: 57240349
     locked: 0

@@ -5,21 +5,22 @@ using TMPro;
 
 public class HandStateUIManager : MonoBehaviour
 {
-    // Attributes input UI elements
-    
+    [Header("References")]
+    public GameObject attributesUI;
+
+    // UI elements
+    [Header("UI Elements")]
     public TextMeshProUGUI stateNameText;
+    public TMP_InputField stateNameInputField;
+    public Button submitAttributesButton;
+
+    [Header("Toggles")]
     public Toggle quaternionToggle;
     public Toggle fingerToggle;
     public Toggle qxToggle;
     public Toggle qyToggle;
     public Toggle qzToggle;
     public Toggle qwToggle;
-
-    public TMP_InputField stateNameInputField;
-    public GameObject attributesUI;
-
-    public Button submitAttributesButton;
-
     private void Start()
     {
         // Initially hide the UI

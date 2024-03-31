@@ -1,92 +1,65 @@
 using System;
 using System.Collections;
 using System.IO.Ports;
+using System.Threading;
 using UnityEngine;
+using TMPro;
 
 public class GloveController : MonoBehaviour
 {
-    public string portName = "COM3";
-    public int baudRate = 9600;
-    private SerialPort serialPort;
-
     // Joint transforms for each finger
+    [Header("Finger Joints")]
     public Transform[] thumbJoints;
     public Transform[] indexJoints;
     public Transform[] middleJoints;
     public Transform[] ringJoints;
     public Transform[] pinkyJoints;
 
-    private bool isCalibrated = false; // Track if the system has been calibrated
+    [Header("Threshold Values")]
+    public float quaternionThreshold = 0.08f; // Threshold for avoiding the unnecessary rotation of the hand model
+
+    public bool isCalibrated = false; // Track if the system has been calibrated
     private float[] fingerMinValues = new float[5]; // Minimum calibration values for fingers
     private float[] fingerMaxValues = new float[5]; // Maximum calibration values for fingers
     private float[] tempCalibrationValues = new float[5]; // Temporary storage for calibration values
     private Vector3 initialPosition;  // Store the initial position of the model
     private Quaternion initialRotation; // Store the initial rotation of the model
-    public float quaternionThreshold = 0.08f; // Threshold for avoiding the unnecessary rotation of the hand model
     private float qw, qx, qy, qz; // Quaternion values for the model rotation
     private float prevQw, prevQx, prevQy, prevQz; // Previous quaternion values
     private float[] prevFingerValues = new float[5]; // Previous finger values
     private float[] fingerNormalizedValues = new float[5]; // Normalized finger values
 
+    // Multithreading approach for reading serial data
+    private Thread serialThread;
+    private bool isRunning = true;
+    private string serialData;
+    private readonly object lockObject = new object();
+    private readonly object portLock = new object();
+    public SerialPortManager serialPortManager;
+
+
+
     void Start()
     {
-        initialPosition = transform.position;
-        initialRotation = transform.rotation;
-
-        Debug.Log("Initial position: " + initialPosition);
-        Debug.Log("Initial rotation: " + initialRotation);
-
-        serialPort = new SerialPort(portName, baudRate);
-        try
+        serialPortManager = FindObjectOfType<SerialPortManager>();
+        if (serialPortManager == null)
         {
-            serialPort.Open();
-            Debug.Log("Serial port opened");
-            StartCalibration();
+            Debug.LogError("SerialPortManager not found. Please add SerialPortManager to the scene.");
+            return;
         }
-        catch (Exception e)
-        {
-            Debug.LogError("Could not open serial port: " + e.Message);
-        }
-
-        StartCoroutine(ReadSerialDataAsync());
     }
 
     void Update()
+{
+    if (!InputController.isAwaitingInput && serialPortManager.isCalibrated)
     {
-        // if (!InputController.isAwaitingInput)
-        // {
-        //     if (isCalibrated && serialPort != null && serialPort.IsOpen)
-        //     {
-        //         try
-        //         {
-        //             string dataString = serialPort.ReadLine();
-        //             ParseData(dataString);
-        //         }
-        //         catch (TimeoutException)
-        //         {
-        //             Debug.LogWarning("Timeout exception");
-        //         }
-        //     }
-        // }
-    }
-
-    private IEnumerator ReadSerialDataAsync() 
-    {
-        while (true) {
-            if (!InputController.isAwaitingInput && isCalibrated && serialPort != null && serialPort.IsOpen) {
-                try {
-                    string dataString = serialPort.ReadLine();
-                    // Use Unity's main thread to update any Unity-specific operations
-                    UnityMainThreadDispatcher.Instance().Enqueue(() => ParseData(dataString));
-                }
-                catch (TimeoutException) {
-                    Debug.LogWarning("Timeout exception in serial read");
-                }
-            }
-            yield return null; // You might adjust this to wait for a few milliseconds instead
+        string data;
+        while (serialPortManager.DataQueue.TryDequeue(out data))
+        {
+            ParseData(data);
         }
     }
-
+}
 
     void ParseData(string data)
     {
@@ -179,16 +152,22 @@ public class GloveController : MonoBehaviour
 
     private IEnumerator StartCalibrationRoutine()
     {
+        // Get Text From Calibration Scene which name is "StatusText"
+        TextMeshProUGUI statusText = GameObject.Find("StatusText").GetComponent<TextMeshProUGUI>();
+
+        statusText.text = "Starting calibration...";
         Debug.Log("Starting calibration...");
         yield return new WaitForSeconds(15f); // Wait for the initial calibration of MPU6050 (can be modified at arduino code maybe)
 
         // Finger calibration is done in two parts: first, the user makes a fist, then opens their hand
+        statusText.text = "Calibration start (Part 1): Make a fist.";
         Debug.Log("Calibration start (Part 1): Make a fist.");
         
         yield return new WaitForSeconds(2f);
         yield return StartCoroutine(ReadFingerCalibrationValues(true)); // true for min values
         yield return new WaitForSeconds(5f);
 
+        statusText.text = "Calibration start (Part 2): Open your hand.";
         Debug.Log("Calibration start (Part 2): Open your hand.");
         yield return new WaitForSeconds(2f);
         yield return StartCoroutine(ReadFingerCalibrationValues(false)); // false for max values
@@ -200,57 +179,116 @@ public class GloveController : MonoBehaviour
         }
 
         isCalibrated = true;
+        serialPortManager.isCalibrated = true;
+        statusText.text = "Calibration completed.";
         Debug.Log("Calibration completed.");
     }
+
+    // private IEnumerator ReadFingerCalibrationValues(bool isReadingMinValues)
+    // {
+    //     float[] sumValues = new float[5];
+    //     int readingsCount = 0;
+
+    //     float startTime = Time.time;
+    //     string data;
+    //     while (Time.time - startTime < 5f && serialPortManager.DataQueue.TryDequeue(out data)) // Collect data for 5 seconds
+    //     {
+    //         // Debug.Log("Data from ReadFingerCalibrationValues: " + data);
+
+    //         // string dataString = serialPort.ReadLine();
+    //         string[] values = data.Split(',');
+
+    //         // Sum the values for each finger
+    //         for (int i = 0; i < 5; i++)
+    //         {
+    //             // If the data is not in the expected format, skip the current iteration
+    //             try {
+    //                 sumValues[i] += float.Parse(values[4 + i]); // Adjust index based on your data format
+    //             } catch (Exception e)
+    //             {
+    //                 Debug.LogError("Error parsing data: " + e.Message);
+    //                 continue;
+    //             }
+    //         }
+    //         readingsCount++;
+
+    //         yield return null; // Wait for the next frame
+    //     }
+
+    //     // Calculate the mean for each finger
+    //     for (int i = 0; i < 5; i++)
+    //     {
+    //         tempCalibrationValues[i] = sumValues[i] / readingsCount;
+    //     }
+
+    //     // Assign the averaged values to the appropriate calibration array
+    //     if (isReadingMinValues)
+    //     {
+    //         fingerMinValues = (float[])tempCalibrationValues.Clone();
+    //     }
+    //     else
+    //     {
+    //         fingerMaxValues = (float[])tempCalibrationValues.Clone();
+    //     }
+
+    //     Debug.Log("Calibration values read.");
+    // }
 
     private IEnumerator ReadFingerCalibrationValues(bool isReadingMinValues)
     {
         float[] sumValues = new float[5];
         int readingsCount = 0;
-
         float startTime = Time.time;
-        while (Time.time - startTime < 5f) // Collect data for 5 seconds
+
+        // Loop for 5 seconds, regardless of data availability
+        while (Time.time - startTime < 5f)
         {
-            if (serialPort != null && serialPort.IsOpen)
+            // Attempt to process all available data in the queue each frame
+            while (serialPortManager.DataQueue.TryDequeue(out string data))
             {
-                string dataString = serialPort.ReadLine();
-                string[] values = dataString.Split(',');
+                string[] values = data.Split(',');
 
-                // Sum the values for each finger
-                for (int i = 0; i < 5; i++)
+                if (values.Length >= 9) // Assuming data format with at least 9 values
                 {
-                    // If the data is not in the expected format, skip the current iteration
-                    try {
-                        sumValues[i] += float.Parse(values[4 + i]); // Adjust index based on your data format
-                    } catch (Exception e)
+                    for (int i = 0; i < 5; i++) // Process only the finger values
                     {
-                        Debug.LogError("Error parsing data: " + e.Message);
-                        continue;
+                        if (float.TryParse(values[4 + i], out float parsedValue))
+                        {
+                            sumValues[i] += parsedValue;
+                        }
+                        else
+                        {
+                            Debug.LogError("Error parsing data: " + values[4 + i]);
+                        }
                     }
+                    readingsCount++;
                 }
-                readingsCount++;
             }
-            yield return null; // Wait for the next frame
+
+            yield return null; // Yield to the next frame, allowing other updates to process
         }
 
-        // Calculate the mean for each finger
-        for (int i = 0; i < 5; i++)
+        if (readingsCount > 0) // Ensure we have at least one reading to avoid division by zero
         {
-            tempCalibrationValues[i] = sumValues[i] / readingsCount;
-        }
-
-        // Assign the averaged values to the appropriate calibration array
-        if (isReadingMinValues)
-        {
-            fingerMinValues = (float[])tempCalibrationValues.Clone();
+            for (int i = 0; i < 5; i++)
+            {
+                float averageValue = sumValues[i] / readingsCount; // Calculate average or accumulate values
+                if (isReadingMinValues)
+                {
+                    fingerMinValues[i] = averageValue;
+                }
+                else
+                {
+                    fingerMaxValues[i] = averageValue;
+                }
+            }
         }
         else
         {
-            fingerMaxValues = (float[])tempCalibrationValues.Clone();
+            Debug.LogError("No valid readings were processed.");
         }
-
-        Debug.Log("Calibration values read.");
     }
+
 
     public void StartCalibration()
     {
@@ -278,14 +316,6 @@ public class GloveController : MonoBehaviour
     float MapValueToRange(float value, float inMin, float inMax, float outMin, float outMax)
     {
         return Mathf.Clamp((value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin, 0f, 100f);
-    }
-
-    void OnApplicationQuit()
-    {
-        if (serialPort != null && serialPort.IsOpen)
-        {
-            serialPort.Close();
-        }
     }
 
     public bool GetIsCalibrated()

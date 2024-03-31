@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class InputController : MonoBehaviour
 {
+    [Header("References")]
     // Reference to the GloveController script
     public GloveController gloveController;
 
@@ -20,6 +22,8 @@ public class InputController : MonoBehaviour
 
     // List to store predefined hand states
     private List<HandState> handStates = new List<HandState>();
+
+    [Header("Thresholds")]
     public float quaternionThreshold = 0.05f; // Threshold for comparing quaternion values
     public float fingerThreshold = 15f; // Threshold for comparing finger values
     public float minMaxThreshold = 10f; // Threshold for checking if a finger value is near the min or max value
@@ -57,42 +61,48 @@ public class InputController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (!isAwaitingInput)
         {
-            // Check the current hand state
-            if (Time.time >= nextCheckTime) 
-            {
-                CheckHandState();
-                nextCheckTime = Time.time + checkInterval;
-            }
+            // // Check the current hand state
+            // if (Time.time >= nextCheckTime) 
+            // {
+            //     CheckHandState();
+            //     nextCheckTime = Time.time + checkInterval;
+            // }
 
-            // Collect and add a hand state to the list
-            if (Input.GetKeyDown(KeyCode.Alpha1)) //
-            {
-                StartCoroutine(CollectAndAddHandState()); 
-            }
-    
+            CheckHandState();
 
-            if (Input.GetKeyDown(KeyCode.L)) // Load hand states from file and print them
+            // If current scene is the Calibration scene
+            if (SceneManager.GetActiveScene().buildIndex == 1 && gloveController.GetIsCalibrated()) 
             {
-                LoadHandStates();
-                foreach (HandState state in handStateCollection.handStates)
+                // Collect and add a hand state to the list
+                if (Input.GetKeyDown(KeyCode.Alpha1)) //
                 {
-                    Debug.Log("Quaternion: ");
-                    for (int i = 0; i < state.quaternionValues.Length; i++)
+                    StartCoroutine(CollectAndAddHandState()); 
+                }
+            
+
+                if (Input.GetKeyDown(KeyCode.L)) // Load hand states from file and print them
+                {
+                    LoadHandStates();
+                    foreach (HandState state in handStateCollection.handStates)
                     {
-                        Debug.Log(state.quaternionValues[i]);
+                        Debug.Log("Quaternion: ");
+                        for (int i = 0; i < state.quaternionValues.Length; i++)
+                        {
+                            Debug.Log(state.quaternionValues[i]);
+                        }
+                        Debug.Log("Fingers: ");
+                        for (int i = 0; i < state.fingerValues.Length; i++)
+                        {
+                            Debug.Log(state.fingerValues[i]);
+                        }
+                        Debug.Log("Includes Quaternion: " + state.includesQuaternion);
+                        Debug.Log("Includes Fingers: " + state.includesFingers);
+                        Debug.Log("Included Quaternion Components: " + state.includedQuaternionComponents);
                     }
-                    Debug.Log("Fingers: ");
-                    for (int i = 0; i < state.fingerValues.Length; i++)
-                    {
-                        Debug.Log(state.fingerValues[i]);
-                    }
-                    Debug.Log("Includes Quaternion: " + state.includesQuaternion);
-                    Debug.Log("Includes Fingers: " + state.includesFingers);
-                    Debug.Log("Included Quaternion Components: " + state.includedQuaternionComponents);
                 }
             }
         }
@@ -127,7 +137,7 @@ public class InputController : MonoBehaviour
                     // Debug.Log("Match with State named: " + state.name);
                     handStateUIManager.SetCurrentStateName("Current State: " + state.name);
 
-                    // **New Step: Execute car control based on the matched hand state name**
+                    // Execute the action associated with the matched hand state
                     executionController.ExecuteSceneAction(state.name);
                     break;
                 }
