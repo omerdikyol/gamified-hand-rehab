@@ -141,6 +141,10 @@ public class InputController : MonoBehaviour
                     executionController.ExecuteSceneAction(state.name);
                     break;
                 }
+                else 
+                {
+                    handStateUIManager.SetCurrentStateName("Current State: No match");
+                }
             }
         }
     }

@@ -68,36 +68,14 @@ public class GloveController : MonoBehaviour
         if (values.Length >= 9) // 4 for IMU data and 5 for finger data
         {
             // Parse the incoming IMU data
-            float tempQw = float.Parse(values[0]);
-            float tempQx = float.Parse(values[1]);
-            float tempQy = float.Parse(values[2]);
-            float tempQz = float.Parse(values[3]);
+            float qw = float.Parse(values[0]);
+            float qx = float.Parse(values[1]);
+            float qy = float.Parse(values[2]);
+            float qz = float.Parse(values[3]);
 
-            // Apply quaternion dead zone by comparing with previous values
-            if (Mathf.Abs(tempQw - prevQw) > quaternionThreshold || Mathf.Abs(tempQx - prevQx) > quaternionThreshold ||
-                Mathf.Abs(tempQy - prevQy) > quaternionThreshold || Mathf.Abs(tempQz - prevQz) > quaternionThreshold)
-            {
-                qw = tempQw;
-                qx = tempQx;
-                qy = tempQy;
-                qz = tempQz;
-
-                // Update previous quaternion values
-                prevQw = qw;
-                prevQx = qx;
-                prevQy = qy;
-                prevQz = qz;
-
-                // If current rotation is close to the initial rotation, reset the rotation
-                if (Quaternion.Angle(initialRotation, transform.rotation) < 5f)
-                {
-                    transform.rotation = initialRotation;
-                }
-
-                // Apply the quaternion values to the model
-                transform.rotation = new Quaternion(qx, qz, qy, -qw);
-            }
-
+            // Apply rotation to the hand model
+            transform.rotation = new Quaternion(qx, qz, qy, -qw);
+            
             // Parse finger potentiometer values
             for (int i = 0; i < 5; i++)
             {

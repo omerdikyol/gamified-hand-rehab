@@ -435,7 +435,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   portName: COM3
-  baudRate: 9600
+  baudRate: 115200
   quaternionThreshold: 0.08
   isCalibrated: 0
 --- !u!4 &522803548 stripped

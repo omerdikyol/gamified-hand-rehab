@@ -20,7 +20,7 @@ uint8_t fifoBuffer[64]; // FIFO storage buffer
 Quaternion q;           // [w, x, y, z]         quaternion container
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Wire.begin();
 
   // Initialize the MPU6050 sensor
