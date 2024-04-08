@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ExecutionController : MonoBehaviour
 {
@@ -9,9 +10,19 @@ public class ExecutionController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (currentSceneIndex == 0)
+        // Get the current scene index
+        currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+
+        switch (currentSceneIndex)
         {
-            carController = FindObjectOfType<CarController>();
+            case 0:
+                carController = FindObjectOfType<CarController>();
+                break;
+            case 3:
+                birdJumpPlayer = FindObjectOfType<Player>();
+                break;
+            default:
+                break;
         }
     }
 
@@ -29,6 +40,9 @@ public class ExecutionController : MonoBehaviour
             case 0:
                 ExecuteCarControl(stateName);
                 break;
+            case 3:
+                ExecuteBirdJumpControl(stateName);
+                break;
             default:
                 break;
         }
@@ -36,7 +50,7 @@ public class ExecutionController : MonoBehaviour
 
     //** Car Scene **//
     // Flags to track control states - could also be part of a dedicated control state object
-    public CarController carController;
+    private CarController carController;
     private bool shouldAccelerate = false;
     private bool shouldBrake = false;
     private bool shouldSteerLeft = false;
@@ -64,5 +78,20 @@ public class ExecutionController : MonoBehaviour
             carController.ProcessControlStates(shouldAccelerate, shouldBrake, shouldSteerLeft, shouldSteerRight);
         }
     }
-    //** Car Scene **//
+
+    //** Bird Jump **//
+
+    private Player birdJumpPlayer;
+
+    // Execute bird jump control based on the matched hand state name
+    private void ExecuteBirdJumpControl(string stateName)
+    {
+        if (birdJumpPlayer != null)
+        {
+            if (stateName == "OpenHandFingersOnly")
+            {
+                birdJumpPlayer.Jump();
+            }
+        }
+    }
 }

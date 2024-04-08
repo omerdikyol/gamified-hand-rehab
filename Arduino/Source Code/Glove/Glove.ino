@@ -34,7 +34,7 @@ void setup() {
   accelgyro.setXGyroOffset(220);
   accelgyro.setYGyroOffset(76);
   accelgyro.setZGyroOffset(-85);
-  accelgyro.setZAccelOffset(1788); // 1688 factory default for my test chip
+  accelgyro.setZAccelOffset(2000); // 1688 factory default for my test chip
 
   // make sure it worked (returns 0 if so)
   if (devStatus == 0) {

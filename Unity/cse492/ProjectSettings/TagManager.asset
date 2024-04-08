@@ -11,6 +11,7 @@ TagManager:
   - Enemy
   - Environ
   - Hand
+  - AttributesUI
   layers:
   - Default
   - TransparentFX
@@ -21,8 +22,8 @@ TagManager:
   - Hand
   - MenuUI
   - HandUI
-  - 
-  - 
+  - TopRightHandUI
+  - AddStatesUI
   - 
   - 
   - 

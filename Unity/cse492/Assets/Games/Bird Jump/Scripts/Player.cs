@@ -31,10 +31,6 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) {
-            direction = Vector3.up * strength;
-        }
-
         // Apply gravity and update the position
         direction.y += gravity * Time.deltaTime;
         transform.position += direction * Time.deltaTime;
@@ -65,6 +61,11 @@ public class Player : MonoBehaviour
         } else if (other.gameObject.CompareTag("Scoring")) {
             GameManager.Instance.IncreaseScore();
         }
+    }
+
+    public void Jump()
+    {
+        direction = Vector3.up * strength;
     }
 
 }

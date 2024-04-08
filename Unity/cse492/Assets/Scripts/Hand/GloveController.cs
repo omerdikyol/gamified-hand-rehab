@@ -37,8 +37,6 @@ public class GloveController : MonoBehaviour
     private readonly object portLock = new object();
     public SerialPortManager serialPortManager;
 
-
-
     void Start()
     {
         serialPortManager = FindObjectOfType<SerialPortManager>();
@@ -50,16 +48,16 @@ public class GloveController : MonoBehaviour
     }
 
     void Update()
-{
-    if (!InputController.isAwaitingInput && serialPortManager.isCalibrated)
     {
-        string data;
-        while (serialPortManager.DataQueue.TryDequeue(out data))
+        if (!InputController.isAwaitingInput && serialPortManager.isCalibrated)
         {
-            ParseData(data);
+            string data;
+            while (serialPortManager.DataQueue.TryDequeue(out data))
+            {
+                ParseData(data);
+            }
         }
     }
-}
 
     void ParseData(string data)
     {
@@ -270,6 +268,14 @@ public class GloveController : MonoBehaviour
 
     public void StartCalibration()
     {
+        // Clear the calibration values
+        fingerMinValues = new float[5];
+        fingerMaxValues = new float[5];
+        tempCalibrationValues = new float[5];
+        isCalibrated = false;
+        serialPortManager.isCalibrated = false;
+
+        // Start the calibration routine
         StartCoroutine(StartCalibrationRoutine());
     }
 
