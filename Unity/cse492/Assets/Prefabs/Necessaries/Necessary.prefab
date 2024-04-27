@@ -1186,6 +1186,7 @@ Transform:
   - {fileID: 2893941557113289531}
   - {fileID: 9173004733657084322}
   - {fileID: 1979067110484402908}
+  - {fileID: 542555297546725785}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2340710494756642931
@@ -1602,6 +1603,50 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &5519559884956368111
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 542555297546725785}
+  - component: {fileID: 2488817013187689433}
+  m_Layer: 0
+  m_Name: FingerAngleCollector
+  m_TagString: FingerAngleCollector
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &542555297546725785
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5519559884956368111}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6440814779181111667}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2488817013187689433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5519559884956368111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a418f32f4b4e2e44b9d370045e843ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5932599252163516068
 GameObject:
   m_ObjectHideFlags: 0
@@ -2888,6 +2933,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 7357882499918218916, guid: fd6b9bbba50e34545997e0d09667aa85, type: 3}
+      propertyPath: angleCollector
+      value: 
+      objectReference: {fileID: 2488817013187689433}
     - target: {fileID: 7357882499918218916, guid: fd6b9bbba50e34545997e0d09667aa85, type: 3}
       propertyPath: serialPortManager
       value: 

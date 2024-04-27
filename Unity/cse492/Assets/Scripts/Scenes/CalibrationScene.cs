@@ -30,7 +30,8 @@ public class CalibrationScene : MonoBehaviour
             // If Hand object is found, set startButton onClick event to call Hand's StartCalibration method
             if (GameObject.FindWithTag("Hand")) {
                 Debug.Log("Hand found");
-                startButton.onClick.AddListener(GameObject.FindWithTag("Hand").GetComponent<GloveController>().StartCalibration);
+                startButton.onClick.AddListener(GameObject.FindWithTag("Hand").GetComponent<GloveController>().StartCalibration); // Add StartCalibration method as onClick event
+                startButton.onClick.AddListener(GameObject.FindWithTag("FingerAngleCollector").GetComponent<FingerAngleCollector>().ToggleLogging); // Add ToggleLogging method as onClick event
                 isHandFound = true;
                 startButton.interactable = true;
             }

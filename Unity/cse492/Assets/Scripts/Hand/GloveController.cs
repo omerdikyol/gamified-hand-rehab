@@ -34,14 +34,17 @@ public class GloveController : MonoBehaviour
     [Header("GUI Elements")]
     public TextMeshProUGUI[] fingerAngleTexts;
 
+    [Header("Angle Collector")]
+    public FingerAngleCollector angleCollector;
+    
     // Multithreading approach for reading serial data
     [Header("Serial Port Settings")]
+    public SerialPortManager serialPortManager;
     private Thread serialThread;
     private bool isRunning = true;
     private string serialData;
     private readonly object lockObject = new object();
     private readonly object portLock = new object();
-    public SerialPortManager serialPortManager;
 
     void Start()
     {
@@ -61,6 +64,10 @@ public class GloveController : MonoBehaviour
             while (serialPortManager.DataQueue.TryDequeue(out data))
             {
                 ParseData(data);
+                if (angleCollector != null && isCalibrated)
+                {
+                    angleCollector.LogData(fingerNormalizedValues);
+                }
             }
 
             UpdateFingerAnglesGUI(CalculateFingerAngles());
@@ -309,11 +316,11 @@ public class GloveController : MonoBehaviour
     {
         for (int i = 0; i < fingerAngles.Length; i++)
         {
-            fingerAngleTexts[i].text = $"{fingerAngles[i]:F2}°";
+            fingerAngleTexts[i].text = $"{fingerAngles[i]:F3}°";
         }
 
         // Log the angles for debugging purposes
-        Debug.Log($"Angles - Thumb: {fingerAngles[0]:F2}, Index: {fingerAngles[1]:F2}, Middle: {fingerAngles[2]:F2}, Ring: {fingerAngles[3]:F2}, Pinky: {fingerAngles[4]:F2}");
+        // Debug.Log($"Angles - Thumb: {fingerAngles[0]:F2}, Index: {fingerAngles[1]:F2}, Middle: {fingerAngles[2]:F2}, Ring: {fingerAngles[3]:F2}, Pinky: {fingerAngles[4]:F2}");
     }
 
     public bool GetIsCalibrated()
