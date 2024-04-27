@@ -34,7 +34,6 @@ public class ScoreManager : MonoBehaviour
         scoreCounter += Time.deltaTime * scoreSpeed;
         score = (int)scoreCounter;
         scoreText.text = score.ToString("D6");
-        HighScoreManager.SaveHighScore(score);
     }
     public void IncreaseCoin(int value)
     {

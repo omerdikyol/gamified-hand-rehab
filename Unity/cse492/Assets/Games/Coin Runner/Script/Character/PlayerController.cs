@@ -18,8 +18,7 @@ public class PlayerController : MonoBehaviour
     public GameObject characterMesh;
     public GameManagerCoinRunner gameManager;
 
-    private const float MobileSwipeThreshold = 300;
-    private const float MobileSwipeRightThreshold = 100;
+    public float timeBetweenInputs = 0.5f;
 
     private void Start()
     {
@@ -30,14 +29,6 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         direction.y += gravity * Time.deltaTime;
-
-        HandlePCInput();
-
-        if (IsMobileInput())
-        {
-            HandleMobileInput();
-        }
-
     }
 
     private void HandlePCInput()
@@ -62,46 +53,24 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void HandleMobileInput()
-    {
-        touch = Input.GetTouch(0);
+    // private void FixedUpdate()
+    // {
+    //     controller.Move(direction * Time.deltaTime);
+    //     PlayerMove();
+    // }
 
-        if (touch.phase == TouchPhase.Began)
-        {
-            initPos = touch.position;
-        }
-
-        if (touch.phase == TouchPhase.Ended)
-        {
-            endPos = touch.position;
-
-            float swipeDistanceY = endPos.y - initPos.y;
-            float swipeDistanceX = endPos.x - initPos.x;
-
-            if (swipeDistanceY > MobileSwipeThreshold && IsGrounded())
-            {
-                Jump();
-            }
-            else if (swipeDistanceY < -MobileSwipeThreshold)
-            {
-                Roll();
-            }
-            else if (swipeDistanceX > MobileSwipeRightThreshold)
-            {
-                MoveLane(1);
-            }
-            else if (swipeDistanceX < -MobileSwipeRightThreshold)
-            {
-                MoveLane(-1);
-            }
-        }
-    }
+    private float lastInputTime;
 
     private void FixedUpdate()
     {
         controller.Move(direction * Time.deltaTime);
-        PlayerMove();
-    }
+
+        if (Time.time - lastInputTime >= timeBetweenInputs)
+        {
+            PlayerMove();
+            lastInputTime = Time.time;
+        }
+    }  
 
     private void PlayerMove()
     {
@@ -116,18 +85,18 @@ public class PlayerController : MonoBehaviour
         transform.position = targetPosition;
     }
 
-    private bool IsGrounded()
+    public bool IsGrounded()
     {
         return controller.isGrounded;
     }
 
-    private void Jump()
+    public void Jump()
     {
         direction.y = jumpForce;
         animator.SetTrigger("Jump");
     }
 
-    private void Roll()
+    public void Roll()
     {
         if (!IsGrounded())
         {
@@ -138,7 +107,7 @@ public class PlayerController : MonoBehaviour
         controller.center = new Vector3(controller.center.x, 0.34f, controller.center.z);
     }
 
-    private void MoveLane(int direction)
+    public void MoveLane(int direction)
     {
         desiredLane += direction;
         desiredLane = Mathf.Clamp(desiredLane, 0, 2);

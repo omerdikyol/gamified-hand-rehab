@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
 
-    public float speed = 5f;
+    public float speed = 2f;
     public float rotateSpeed = 50f;
     public bool canShoot;
     public bool canRotate;

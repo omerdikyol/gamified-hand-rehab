@@ -17,6 +17,9 @@ public class InputController : MonoBehaviour
     // Reference to the ExecutionController script
     public ExecutionController executionController;
 
+    public static HandStateCollection handStateCollection;
+    private string filePath;
+
     // Variable to keep track of whether the system is awaiting input
     public static bool isAwaitingInput = false;
 
@@ -26,13 +29,12 @@ public class InputController : MonoBehaviour
     [Header("Thresholds")]
     public float quaternionThreshold = 0.05f; // Threshold for comparing quaternion values
     public float fingerThreshold = 15f; // Threshold for comparing finger values
-    public float minMaxThreshold = 10f; // Threshold for checking if a finger value is near the min or max value
+    public float minMaxThreshold = 25f; // Threshold for checking if a finger value is near the min or max value
 
-    public static HandStateCollection handStateCollection;
-    private string filePath;
-
-    private float checkInterval = 0.1f; // Check every 0.1 seconds
+    public float checkInterval = 0.2f; // Check every 0.2 seconds
     private float nextCheckTime = 0f;
+
+
 
     // private bool isAttributesEntered = false;
 
@@ -54,11 +56,12 @@ public class InputController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        if (!isAwaitingInput)
+        if (!isAwaitingInput && Time.time >= nextCheckTime)
         {
             CheckHandState();
+            nextCheckTime = Time.time + checkInterval; // Set the next check time
         }
     }
 

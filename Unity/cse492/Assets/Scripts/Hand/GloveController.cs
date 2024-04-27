@@ -16,7 +16,7 @@ public class GloveController : MonoBehaviour
     public Transform[] pinkyJoints;
 
     [Header("Threshold Values")]
-    public float quaternionThreshold = 0.08f; // Threshold for avoiding the unnecessary rotation of the hand model
+    public float quaternionThreshold = 0.03f; // Threshold for avoiding the unnecessary rotation of the hand model
 
     public bool isCalibrated = false; // Track if the system has been calibrated
     private float[] fingerMinValues = new float[5]; // Minimum calibration values for fingers
@@ -28,8 +28,14 @@ public class GloveController : MonoBehaviour
     private float prevQw, prevQx, prevQy, prevQz; // Previous quaternion values
     private float[] prevFingerValues = new float[5]; // Previous finger values
     private float[] fingerNormalizedValues = new float[5]; // Normalized finger values
+    private float[] fingerAngles = new float[5]; // Store the angles of the fingers
+
+    // GUI elements for displaying finger angles
+    [Header("GUI Elements")]
+    public TextMeshProUGUI[] fingerAngleTexts;
 
     // Multithreading approach for reading serial data
+    [Header("Serial Port Settings")]
     private Thread serialThread;
     private bool isRunning = true;
     private string serialData;
@@ -56,8 +62,13 @@ public class GloveController : MonoBehaviour
             {
                 ParseData(data);
             }
+
+            UpdateFingerAnglesGUI(CalculateFingerAngles());
         }
     }
+
+    private Quaternion initialQuaternion;
+    private bool initialQuaternionSet = false;
 
     void ParseData(string data)
     {
@@ -65,14 +76,37 @@ public class GloveController : MonoBehaviour
 
         if (values.Length >= 9) // 4 for IMU data and 5 for finger data
         {
-            // Parse the incoming IMU data
-            float qw = float.Parse(values[0]);
-            float qx = float.Parse(values[1]);
-            float qy = float.Parse(values[2]);
-            float qz = float.Parse(values[3]);
+            // Parse quaternion values
+            float newQw = float.Parse(values[0]);
+            float newQx = float.Parse(values[1]);
+            float newQy = float.Parse(values[2]);
+            float newQz = float.Parse(values[3]);
 
-            // Apply rotation to the hand model
-            transform.rotation = new Quaternion(qx, qz, qy, -qw);
+            Quaternion incomingQuaternion = new Quaternion(newQx, newQz, newQy, -newQw);
+
+            // Set the initial quaternion if not set
+            if (!initialQuaternionSet)
+            {
+                initialQuaternion = incomingQuaternion;
+                initialQuaternionSet = true;
+            }
+
+            // Adjust the quaternion by the initial quaternion
+            Quaternion correctedQuaternion = Quaternion.Inverse(initialQuaternion) * incomingQuaternion;
+
+            // Apply the corrected quaternion to the transform
+            if (QuaternionDifferenceExceedsThreshold(correctedQuaternion, transform.rotation))
+            {
+                transform.rotation = correctedQuaternion;
+            }
+
+            transform.rotation = correctedQuaternion;
+
+            // Update previous quaternion values (if needed)
+            prevQw = newQw;
+            prevQx = newQx;
+            prevQy = newQy;
+            prevQz = newQz;
             
             // Parse finger potentiometer values
             for (int i = 0; i < 5; i++)
@@ -109,6 +143,11 @@ public class GloveController : MonoBehaviour
         {
             Debug.LogError("Data string does not contain enough values. Received: " + values.Length);
         }
+    }
+
+    bool QuaternionDifferenceExceedsThreshold(Quaternion q1, Quaternion q2)
+    {
+        return Mathf.Abs(Quaternion.Dot(q1, q2)) < quaternionThreshold;
     }
 
     // Clamping approach for finger rotation (Not effective as i thought)
@@ -159,56 +198,6 @@ public class GloveController : MonoBehaviour
         statusText.text = "Calibration completed.";
         Debug.Log("Calibration completed.");
     }
-
-    // private IEnumerator ReadFingerCalibrationValues(bool isReadingMinValues)
-    // {
-    //     float[] sumValues = new float[5];
-    //     int readingsCount = 0;
-
-    //     float startTime = Time.time;
-    //     string data;
-    //     while (Time.time - startTime < 5f && serialPortManager.DataQueue.TryDequeue(out data)) // Collect data for 5 seconds
-    //     {
-    //         // Debug.Log("Data from ReadFingerCalibrationValues: " + data);
-
-    //         // string dataString = serialPort.ReadLine();
-    //         string[] values = data.Split(',');
-
-    //         // Sum the values for each finger
-    //         for (int i = 0; i < 5; i++)
-    //         {
-    //             // If the data is not in the expected format, skip the current iteration
-    //             try {
-    //                 sumValues[i] += float.Parse(values[4 + i]); // Adjust index based on your data format
-    //             } catch (Exception e)
-    //             {
-    //                 Debug.LogError("Error parsing data: " + e.Message);
-    //                 continue;
-    //             }
-    //         }
-    //         readingsCount++;
-
-    //         yield return null; // Wait for the next frame
-    //     }
-
-    //     // Calculate the mean for each finger
-    //     for (int i = 0; i < 5; i++)
-    //     {
-    //         tempCalibrationValues[i] = sumValues[i] / readingsCount;
-    //     }
-
-    //     // Assign the averaged values to the appropriate calibration array
-    //     if (isReadingMinValues)
-    //     {
-    //         fingerMinValues = (float[])tempCalibrationValues.Clone();
-    //     }
-    //     else
-    //     {
-    //         fingerMaxValues = (float[])tempCalibrationValues.Clone();
-    //     }
-
-    //     Debug.Log("Calibration values read.");
-    // }
 
     private IEnumerator ReadFingerCalibrationValues(bool isReadingMinValues)
     {
@@ -300,6 +289,31 @@ public class GloveController : MonoBehaviour
     float MapValueToRange(float value, float inMin, float inMax, float outMin, float outMax)
     {
         return Mathf.Clamp((value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin, 0f, 100f);
+    }
+
+    public float[] CalculateFingerAngles()
+    {
+        int[] fingerMaxROM = new int[] {60, 90, 90, 90, 90}; // Maximum range of motion for each finger
+
+        for (int i = 0; i < 5; i++)
+        {
+            // Calculate the angle based on the normalized value
+            // fingerNormalizedValues[i] should be a percentage (0-100)
+            fingerAngles[i] = fingerNormalizedValues[i] / 100f * fingerMaxROM[i];
+        }
+
+        return fingerAngles;
+    }
+
+    void UpdateFingerAnglesGUI(float[] fingerAngles)
+    {
+        for (int i = 0; i < fingerAngles.Length; i++)
+        {
+            fingerAngleTexts[i].text = $"{fingerAngles[i]:F2}°";
+        }
+
+        // Log the angles for debugging purposes
+        Debug.Log($"Angles - Thumb: {fingerAngles[0]:F2}, Index: {fingerAngles[1]:F2}, Middle: {fingerAngles[2]:F2}, Ring: {fingerAngles[3]:F2}, Pinky: {fingerAngles[4]:F2}");
     }
 
     public bool GetIsCalibrated()

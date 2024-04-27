@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerControllerSpaceShooter : MonoBehaviour
 {
-    public float speed = 5f;
+    public float speed = 30f;
 
     public float min_Y, max_Y;
 
@@ -34,54 +34,45 @@ public class PlayerControllerSpaceShooter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Move();
-        Shoot();
-    }
-
-    void Move()
-    {
-        if(Input.GetAxisRaw("Vertical") > 0f)
+        attack_Timer += Time.deltaTime;
+        if (attack_Timer > current_Attack_Timer)
         {
-            Vector3 temp = transform.position;
-            temp.y += speed * Time.deltaTime;
-
-            if(temp.y > max_Y)
-                temp.y = max_Y;
-
-            transform.position = temp;
-        }
-        else if(Input.GetAxisRaw("Vertical") < 0f)
-        {
-            Vector3 temp = transform.position;
-            temp.y -= speed * Time.deltaTime;
-
-            if(temp.y < min_Y)
-                temp.y = min_Y;
-            
-            transform.position = temp;
+            attack_On = true;
         }
     }
 
-    void Shoot()
+    public void MoveUp()
     {
-       attack_Timer += Time.deltaTime;
+        Vector3 temp = transform.position;
+        temp.y += speed * Time.deltaTime;
 
-       if(attack_Timer > current_Attack_Timer)
-       {
-           attack_On = true;
-       }
+        if(temp.y > max_Y)
+            temp.y = max_Y;
 
-        if(Input.GetKeyDown(KeyCode.Space))
+        transform.position = temp;
+    }
+
+    public void MoveDown()
+    {
+        Vector3 temp = transform.position;
+        temp.y -= speed * Time.deltaTime;
+
+        if(temp.y < min_Y)
+            temp.y = min_Y;
+        
+        transform.position = temp;
+    }
+
+    public void Shoot()
+    {
+        if(attack_On)
         {
-            if(attack_On)
-            {
-                attack_On = false;
-                attack_Timer = 0f;
-                Instantiate(Player_Bullet, attack_Point.position, Quaternion.identity);
+            attack_On = false;
+            attack_Timer = 0f;
+            Instantiate(Player_Bullet, attack_Point.position, Quaternion.identity);
 
-                //play sound FX
-                laserAudio.Play();
-            }
+            //play sound FX
+            laserAudio.Play();
         }
     }
 }
