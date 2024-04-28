@@ -29,9 +29,6 @@ public class ExecutionController : MonoBehaviour
         // Depending on the new scene, find and set up the necessary components
         switch (currentSceneIndex)
         {
-            case 0:
-                carController = FindObjectOfType<CarController>();
-                break;
             case 3:
                 birdJumpPlayer = FindObjectOfType<Player>();
                 break;
@@ -51,9 +48,6 @@ public class ExecutionController : MonoBehaviour
     {
         switch (currentSceneIndex)
         {
-            case 0:
-                ExecuteCarControl(stateName);
-                break;
             case 3:
                 ExecuteBirdJumpControl(stateName);
                 break;
@@ -65,37 +59,6 @@ public class ExecutionController : MonoBehaviour
                 break;
             default:
                 break;
-        }
-    }
-
-    //** Car Scene **//
-    // Flags to track control states - could also be part of a dedicated control state object
-    private CarController carController;
-    private bool shouldAccelerate = false;
-    private bool shouldBrake = false;
-    private bool shouldSteerLeft = false;
-    private bool shouldSteerRight = false;
-
-    // Execute car control based on the matched hand state name
-    private void ExecuteCarControl(string stateName)
-    {
-        // Reset control flags
-        shouldAccelerate = false;
-        shouldBrake = false;
-        shouldSteerLeft = false;
-        shouldSteerRight = false;
-
-        // Set flags based on recognized hand states
-        // Note: This assumes that CheckHandState and related logic can set multiple flags per frame as needed
-        if (stateName == "OpenHand") shouldAccelerate = true;
-        if (stateName == "Fist") shouldBrake = true;
-        if (stateName == "IndexFinger") shouldSteerLeft = true;
-        if (stateName == "IndexAndMiddleFinger") shouldSteerRight = true;
-
-        
-        if (carController != null)
-        {
-            carController.ProcessControlStates(shouldAccelerate, shouldBrake, shouldSteerLeft, shouldSteerRight);
         }
     }
 
