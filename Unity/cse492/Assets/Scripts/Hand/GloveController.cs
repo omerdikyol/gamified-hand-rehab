@@ -42,7 +42,6 @@ public class GloveController : MonoBehaviour
     [Header("Serial Port Settings")]
     public SerialPortManager serialPortManager;
     private Thread serialThread;
-    private bool isRunning = true;
     private string serialData;
     private readonly object lockObject = new object();
     private readonly object portLock = new object();

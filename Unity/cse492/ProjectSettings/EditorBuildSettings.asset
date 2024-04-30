@@ -21,9 +21,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Games/CoinRunner.unity
     guid: f62dc84de4297c249a27b3cdc89f52c1
   - enabled: 1
-    path: Assets/Scenes/Games/Glider.unity
-    guid: 21f396674cb61834ca6c5077d16414af
-  - enabled: 1
     path: Assets/Scenes/Games/SpaceShooter.unity
     guid: adbbbdc24b8364b42bfb2631a6ccc9bb
   - enabled: 1

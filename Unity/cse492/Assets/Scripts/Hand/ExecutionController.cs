@@ -35,7 +35,7 @@ public class ExecutionController : MonoBehaviour
             case 4:
                 playerController = FindObjectOfType<PlayerController>();
                 break;
-            case 6:
+            case 5:
                 playerControllerSpaceShooter = FindObjectOfType<PlayerControllerSpaceShooter>();
                 break;
             default:
@@ -54,7 +54,7 @@ public class ExecutionController : MonoBehaviour
             case 4:
                 ExecuteCoinRunnerControl(stateName);
                 break;
-            case 6:
+            case 5:
                 ExecuteSpaceShooterControl(stateName);
                 break;
             default:
