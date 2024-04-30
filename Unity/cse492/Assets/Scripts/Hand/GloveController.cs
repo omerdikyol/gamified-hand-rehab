@@ -4,6 +4,7 @@ using System.IO.Ports;
 using System.Threading;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class GloveController : MonoBehaviour
 {
@@ -174,25 +175,37 @@ public class GloveController : MonoBehaviour
 
     private IEnumerator StartCalibrationRoutine()
     {
+        CountdownTimer countdownTimer = GameObject.Find("CountdownTimer").GetComponent<CountdownTimer>();
+        RawImage openHandImage = GameObject.Find("OpenHandImage").GetComponent<RawImage>();
+        RawImage fistImage = GameObject.Find("FistImage").GetComponent<RawImage>();
+
         // Get Text From Calibration Scene which name is "StatusText"
         TextMeshProUGUI statusText = GameObject.Find("StatusText").GetComponent<TextMeshProUGUI>();
 
-        statusText.text = "Starting calibration...";
-        Debug.Log("Starting calibration...");
+        statusText.text = "Starting calibration. Waiting for sensor initialization...";
+        Debug.Log("Starting calibration. Waiting for sensor initialization...");
+        countdownTimer.SetTime(15f);
         yield return new WaitForSeconds(15f); // Wait for the initial calibration of MPU6050 (can be modified at arduino code maybe)
 
         // Finger calibration is done in two parts: first, the user makes a fist, then opens their hand
         statusText.text = "Calibration start (Part 1): Make a fist.";
         Debug.Log("Calibration start (Part 1): Make a fist.");
         
+        countdownTimer.SetTime(10f);
+        fistImage.enabled = true;
         yield return new WaitForSeconds(2f);
         yield return StartCoroutine(ReadFingerCalibrationValues(true)); // true for min values
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(3f);
+        fistImage.enabled = false;
 
+        countdownTimer.SetTime(10f);
+        openHandImage.enabled = true;
         statusText.text = "Calibration start (Part 2): Open your hand.";
         Debug.Log("Calibration start (Part 2): Open your hand.");
         yield return new WaitForSeconds(2f);
         yield return StartCoroutine(ReadFingerCalibrationValues(false)); // false for max values
+        yield return new WaitForSeconds(3f);
+        openHandImage.enabled = false;
 
         // Optionally, log the min and max values for each finger
         for (int i = 0; i < 5; i++)
