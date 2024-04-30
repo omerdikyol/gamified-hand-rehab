@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             Application.targetFrameRate = 60;
-            DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad(gameObject);
             Pause();
         }
     }

@@ -24,6 +24,15 @@ EditorBuildSettings:
     path: Assets/Scenes/Games/SpaceShooter.unity
     guid: adbbbdc24b8364b42bfb2631a6ccc9bb
   - enabled: 1
+    path: Assets/Scenes/Games/TutorialBirdJump.unity
+    guid: 80b587f181d0c86419d128e456ebe06b
+  - enabled: 1
+    path: Assets/Scenes/Games/TutorialCoinRunner.unity
+    guid: 03e1b70544a4565478d2637898617e72
+  - enabled: 1
+    path: Assets/Scenes/Games/TutorialSpaceShooter.unity
+    guid: e7c1953080b08b94eb159da703ea12c0
+  - enabled: 1
     path: Assets/Scenes/AddState.unity
     guid: 68511946dc726ef45a853e834e769d70
   m_configObjects: {}

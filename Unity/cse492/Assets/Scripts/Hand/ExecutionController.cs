@@ -29,13 +29,13 @@ public class ExecutionController : MonoBehaviour
         // Depending on the new scene, find and set up the necessary components
         switch (currentSceneIndex)
         {
-            case 3:
+            case 3: case 6:
                 birdJumpPlayer = FindObjectOfType<Player>();
                 break;
-            case 4:
+            case 4: case 7:
                 playerController = FindObjectOfType<PlayerController>();
                 break;
-            case 5:
+            case 5: case 8:
                 playerControllerSpaceShooter = FindObjectOfType<PlayerControllerSpaceShooter>();
                 break;
             default:
@@ -48,13 +48,13 @@ public class ExecutionController : MonoBehaviour
     {
         switch (currentSceneIndex)
         {
-            case 3:
+            case 3: case 6:
                 ExecuteBirdJumpControl(stateName);
                 break;
-            case 4:
+            case 4: case 7:
                 ExecuteCoinRunnerControl(stateName);
                 break;
-            case 5:
+            case 5: case 8:
                 ExecuteSpaceShooterControl(stateName);
                 break;
             default:
