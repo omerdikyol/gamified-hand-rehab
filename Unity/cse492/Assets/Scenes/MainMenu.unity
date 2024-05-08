@@ -1779,6 +1779,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Necessary
       objectReference: {fileID: 0}
+    - target: {fileID: 6404079263373024584, guid: 670f882666e26eb4887797da7953cb38, type: 3}
+      propertyPath: isCalibrated
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6404079263373024584, guid: 670f882666e26eb4887797da7953cb38, type: 3}
+      propertyPath: quaternionThreshold
+      value: 0.02
+      objectReference: {fileID: 0}
     - target: {fileID: 6440814779181111667, guid: 670f882666e26eb4887797da7953cb38, type: 3}
       propertyPath: m_LocalPosition.x
       value: 8.14

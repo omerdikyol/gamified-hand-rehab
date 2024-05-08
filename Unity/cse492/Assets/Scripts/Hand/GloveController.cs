@@ -17,13 +17,13 @@ public class GloveController : MonoBehaviour
     public Transform[] pinkyJoints;
 
     [Header("Threshold Values")]
-    public float quaternionThreshold = 0.05f; // Threshold for avoiding the unnecessary rotation of the hand model
+    public float quaternionThreshold = 0.02f; // Threshold for avoiding the unnecessary rotation of the hand model
 
     public bool isCalibrated = false; // Track if the system has been calibrated
     private float[] fingerMinValuesOfUser = new float[5]; // Minimum calibration values for fingers
     private float[] fingerMaxValuesOfUser = new float[5]; // Maximum calibration values for fingers
-    private float[] fingerMinValuesHealty = { 637, 602, 650, 711, 721 }; // Minimum calibration values for fingers of a healthy hand (Approximately)
-    private float[] fingerMaxValuesHealty = { 445, 496, 470, 522, 522 }; // Maximum calibration values for fingers of a healthy hand (Approximately)
+    private float[] fingerMinValuesHealthy = { 637, 632, 650, 711, 721 }; // Minimum calibration values for fingers of a healthy hand (Approximately)
+    private float[] fingerMaxValuesHealthy = { 445, 496, 470, 522, 522 }; // Maximum calibration values for fingers of a healthy hand (Approximately)
     private float[] tempCalibrationValues = new float[5]; // Temporary storage for calibration values
     private Vector3 initialPosition;  // Store the initial position of the model
     private Quaternion initialRotation; // Store the initial rotation of the model
@@ -67,7 +67,7 @@ public class GloveController : MonoBehaviour
             while (serialPortManager.DataQueue.TryDequeue(out data))
             {
                 ParseData(data, fingerMinValuesOfUser, fingerMaxValuesOfUser, fingerNormalizedValuesForModel, true); // Parse the finger data for changing the hand model
-                ParseData(data, fingerMinValuesHealty, fingerMaxValuesHealty, fingerNormalizedValuesForAngleCollector, false); // Parse the finger data for logging the user's correct finger angles
+                ParseData(data, fingerMinValuesHealthy, fingerMaxValuesHealthy, fingerNormalizedValuesForAngleCollector, false); // Parse the finger data for logging the user's correct finger angles
                 if (angleCollector != null && isCalibrated)
                 {
                     // Log the data for the angle collector but normalize the finger angles based on the ROM and calibration values of a healthy hand first
@@ -109,8 +109,17 @@ public class GloveController : MonoBehaviour
             // Adjust the quaternion by the initial quaternion
             Quaternion correctedQuaternion = Quaternion.Inverse(initialQuaternion) * incomingQuaternion;
 
-            // Apply the corrected quaternion to the transform
-            if (QuaternionDifferenceExceedsThreshold(correctedQuaternion, transform.rotation))
+            // // Apply the corrected quaternion to the transform
+            // if (QuaternionDifferenceExceedsThreshold(correctedQuaternion, transform.rotation))
+            // {
+            //     transform.rotation = correctedQuaternion;
+            // }
+
+            // Apply the corrected quaternion to the transform if the difference exceeds the threshold
+            if (Math.Abs(newQw - prevQw) > quaternionThreshold 
+                || Math.Abs(newQx - prevQx) > quaternionThreshold 
+                || Math.Abs(newQy - prevQy) > quaternionThreshold 
+                || Math.Abs(newQz - prevQz) > quaternionThreshold)
             {
                 transform.rotation = correctedQuaternion;
             }
@@ -229,7 +238,7 @@ public class GloveController : MonoBehaviour
         statusText.text = "Calibration completed.";
         Debug.Log("Calibration completed.");
 
-        // Get the average of the calibration values for a healthy hand and current user's calibration values for better results 
+        
     }
 
     private IEnumerator ReadFingerCalibrationValues(bool isReadingMinValues)
@@ -378,5 +387,15 @@ public class GloveController : MonoBehaviour
     public float[] GetFingerMaxValues()
     {
         return fingerMaxValuesOfUser;
+    }
+
+    public float[] GetFingerMaxValuesHealthy()
+    {
+        return fingerMaxValuesHealthy;
+    }
+
+    public float[] GetFingerMinValuesHealthy()
+    {
+        return fingerMinValuesHealthy;
     }
 }
