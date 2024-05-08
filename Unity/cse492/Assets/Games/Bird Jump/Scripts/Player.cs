@@ -65,7 +65,10 @@ public class Player : MonoBehaviour
 
     public void Jump()
     {
-        direction = Vector3.up * strength;
+        // Check if current height is less than the maximum height
+        if (transform.position.y < 4.3f) {
+            direction = Vector3.up * strength;
+        }
     }
 
 }
