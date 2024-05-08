@@ -17,18 +17,21 @@ public class GloveController : MonoBehaviour
     public Transform[] pinkyJoints;
 
     [Header("Threshold Values")]
-    public float quaternionThreshold = 0.03f; // Threshold for avoiding the unnecessary rotation of the hand model
+    public float quaternionThreshold = 0.05f; // Threshold for avoiding the unnecessary rotation of the hand model
 
     public bool isCalibrated = false; // Track if the system has been calibrated
-    private float[] fingerMinValues = new float[5]; // Minimum calibration values for fingers
-    private float[] fingerMaxValues = new float[5]; // Maximum calibration values for fingers
+    private float[] fingerMinValuesOfUser = new float[5]; // Minimum calibration values for fingers
+    private float[] fingerMaxValuesOfUser = new float[5]; // Maximum calibration values for fingers
+    private float[] fingerMinValuesHealty = { 637, 602, 650, 711, 721 }; // Minimum calibration values for fingers of a healthy hand (Approximately)
+    private float[] fingerMaxValuesHealty = { 445, 496, 470, 522, 522 }; // Maximum calibration values for fingers of a healthy hand (Approximately)
     private float[] tempCalibrationValues = new float[5]; // Temporary storage for calibration values
     private Vector3 initialPosition;  // Store the initial position of the model
     private Quaternion initialRotation; // Store the initial rotation of the model
     private float qw, qx, qy, qz; // Quaternion values for the model rotation
     private float prevQw, prevQx, prevQy, prevQz; // Previous quaternion values
     private float[] prevFingerValues = new float[5]; // Previous finger values
-    private float[] fingerNormalizedValues = new float[5]; // Normalized finger values
+    private float[] fingerNormalizedValuesForModel = new float[5]; // Normalized finger values for hand model
+    private float[] fingerNormalizedValuesForAngleCollector = new float[5]; // Normalized finger values for angle collector
     private float[] fingerAngles = new float[5]; // Store the angles of the fingers
 
     // GUI elements for displaying finger angles
@@ -63,21 +66,26 @@ public class GloveController : MonoBehaviour
             string data;
             while (serialPortManager.DataQueue.TryDequeue(out data))
             {
-                ParseData(data);
+                ParseData(data, fingerMinValuesOfUser, fingerMaxValuesOfUser, fingerNormalizedValuesForModel, true); // Parse the finger data for changing the hand model
+                ParseData(data, fingerMinValuesHealty, fingerMaxValuesHealty, fingerNormalizedValuesForAngleCollector, false); // Parse the finger data for logging the user's correct finger angles
                 if (angleCollector != null && isCalibrated)
                 {
-                    angleCollector.LogData(fingerNormalizedValues);
+                    // Log the data for the angle collector but normalize the finger angles based on the ROM and calibration values of a healthy hand first
+                    float[] fingerAnglesOfModel = CalculateFingerAngles(fingerNormalizedValuesForModel);
+                    float[] fingerAnglesOfHand = CalculateFingerAngles(fingerNormalizedValuesForAngleCollector);
+                    angleCollector.LogData(fingerAnglesOfModel, fingerAnglesOfHand);
+
+                    // Update the finger angles on the GUI
+                    UpdateFingerAnglesGUI(fingerAnglesOfModel);
                 }
             }
-
-            UpdateFingerAnglesGUI(CalculateFingerAngles());
         }
     }
 
     private Quaternion initialQuaternion;
     private bool initialQuaternionSet = false;
 
-    void ParseData(string data)
+    void ParseData(string data, float[] fingerMinValues, float[] fingerMaxValues, float[] outputValues, bool applyToModel = true)
     {
         string[] values = data.Split(',');
 
@@ -107,7 +115,7 @@ public class GloveController : MonoBehaviour
                 transform.rotation = correctedQuaternion;
             }
 
-            transform.rotation = correctedQuaternion;
+            // transform.rotation = correctedQuaternion;
 
             // Update previous quaternion values (if needed)
             prevQw = newQw;
@@ -121,25 +129,28 @@ public class GloveController : MonoBehaviour
                 float rawValue = float.Parse(values[4 + i]);
                 // float normalizedValue = MapValueToRange(float.Parse(values[4 + i]), fingerMinValues[i], fingerMaxValues[i], 85, 5); // With calibration
                 float normalizedValue = 100 - Mathf.Clamp((rawValue - fingerMinValues[i]) / (fingerMaxValues[i] - fingerMinValues[i]) * 100, 0, 100);
-                fingerNormalizedValues[i] = normalizedValue;
+                outputValues[i] = normalizedValue;
                 // Debug.Log("Finger " + i + " value: " + normalizedValue);
-                switch(i)
+                if (applyToModel)
                 {
-                    case 0:
-                        RotateFinger(thumbJoints, normalizedValue);
-                        break;
-                    case 1:
-                        RotateFinger(indexJoints, normalizedValue);
-                        break;
-                    case 2:
-                        RotateFinger(middleJoints, normalizedValue);
-                        break;
-                    case 3:
-                        RotateFinger(ringJoints, normalizedValue);
-                        break;
-                    case 4:
-                        RotateFinger(pinkyJoints, normalizedValue);
-                        break;
+                    switch(i)
+                    {
+                        case 0:
+                            RotateFinger(thumbJoints, normalizedValue);
+                            break;
+                        case 1:
+                            RotateFinger(indexJoints, normalizedValue);
+                            break;
+                        case 2:
+                            RotateFinger(middleJoints, normalizedValue);
+                            break;
+                        case 3:
+                            RotateFinger(ringJoints, normalizedValue);
+                            break;
+                        case 4:
+                            RotateFinger(pinkyJoints, normalizedValue);
+                            break;
+                    }
                 }
             }
 
@@ -209,13 +220,16 @@ public class GloveController : MonoBehaviour
         // Optionally, log the min and max values for each finger
         for (int i = 0; i < 5; i++)
         {
-            Debug.Log($"Finger {i} min: {fingerMinValues[i]}, max: {fingerMaxValues[i]}");
+            Debug.Log($"Finger {i} min: {fingerMinValuesOfUser[i]}, max: {fingerMaxValuesOfUser[i]}");
         }
 
+        // Complete the calibration processs
         isCalibrated = true;
         serialPortManager.isCalibrated = true;
         statusText.text = "Calibration completed.";
         Debug.Log("Calibration completed.");
+
+        // Get the average of the calibration values for a healthy hand and current user's calibration values for better results 
     }
 
     private IEnumerator ReadFingerCalibrationValues(bool isReadingMinValues)
@@ -259,11 +273,11 @@ public class GloveController : MonoBehaviour
                 float averageValue = sumValues[i] / readingsCount; // Calculate average or accumulate values
                 if (isReadingMinValues)
                 {
-                    fingerMinValues[i] = averageValue;
+                    fingerMinValuesOfUser[i] = averageValue;
                 }
                 else
                 {
-                    fingerMaxValues[i] = averageValue;
+                    fingerMaxValuesOfUser[i] = averageValue;
                 }
             }
         }
@@ -277,8 +291,8 @@ public class GloveController : MonoBehaviour
     public void StartCalibration()
     {
         // Clear the calibration values
-        fingerMinValues = new float[5];
-        fingerMaxValues = new float[5];
+        fingerMinValuesOfUser = new float[5];
+        fingerMaxValuesOfUser = new float[5];
         tempCalibrationValues = new float[5];
         isCalibrated = false;
         serialPortManager.isCalibrated = false;
@@ -310,18 +324,18 @@ public class GloveController : MonoBehaviour
         return Mathf.Clamp((value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin, 0f, 100f);
     }
 
-    public float[] CalculateFingerAngles()
+    public float[] CalculateFingerAngles(float[] fingerNormalizedValues)
     {
         int[] fingerMaxROM = new int[] {60, 90, 90, 90, 90}; // Maximum range of motion for each finger
+        float[] result = new float[5];
 
         for (int i = 0; i < 5; i++)
         {
-            // Calculate the angle based on the normalized value
-            // fingerNormalizedValues[i] should be a percentage (0-100)
-            fingerAngles[i] = fingerNormalizedValues[i] / 100f * fingerMaxROM[i];
+            // Calculate the angle based on the normalized value and the maximum ROM
+            result[i] = fingerNormalizedValues[i] / 100f * fingerMaxROM[i];
         }
 
-        return fingerAngles;
+        return result;
     }
 
     void UpdateFingerAnglesGUI(float[] fingerAngles)
@@ -353,16 +367,16 @@ public class GloveController : MonoBehaviour
 
     public float[] GetFingerValues()
     {
-        return fingerNormalizedValues;
+        return fingerNormalizedValuesForModel;
     }
 
     public float[] GetFingerMinValues()
     {
-        return fingerMinValues;
+        return fingerMinValuesOfUser;
     }
 
     public float[] GetFingerMaxValues()
     {
-        return fingerMaxValues;
+        return fingerMaxValuesOfUser;
     }
 }

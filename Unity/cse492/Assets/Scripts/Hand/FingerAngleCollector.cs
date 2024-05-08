@@ -28,19 +28,19 @@ public class FingerAngleCollector : MonoBehaviour
         // Create a new file with the current date and time as its name
         currentLogFilePath = Path.Combine(Application.persistentDataPath, $"FingerMovements_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.csv");
         streamWriter = new StreamWriter(currentLogFilePath, append: true);
-        streamWriter.WriteLine("Timestamp,Scene,Thumb,Index,Middle,Ring,Pinky");
+        streamWriter.WriteLine("Timestamp,Scene,Model_Thumb,Model_Index,Model_Middle,Model_Ring,Model_Pinky,Finger_Thumb,Finger_Index,Finger_Middle,Finger_Ring,Finger_Pinky");
         isLogging = true;
         // Optionally, update button text or UI state here if needed
         Debug.Log($"Logging started. Data will be saved to {currentLogFilePath}");
     }
 
-    public void LogData(float[] angles)
+    public void LogData(float[] anglesOfModel, float[] anglesOfFingers)
     {
         if (isLogging)
         {
             string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
             string sceneName = SceneManager.GetActiveScene().name;
-            streamWriter.WriteLine($"{timestamp},{sceneName},{angles[0]:F2},{angles[1]:F2},{angles[2]:F2},{angles[3]:F2},{angles[4]:F2}");
+            streamWriter.WriteLine($"{timestamp},{sceneName},{string.Join(",", anglesOfModel)},{string.Join(",", anglesOfFingers)}");
             streamWriter.Flush(); // Ensure data is written to the file immediately
         }
     }
