@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: UI Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: UI
+  m_TableCollectionNameGuidString: 655a0f5fa82293c43892ba2a2f90d664
+  m_Entries:
+  - m_Id: 333172563968
+    m_Key: about
+    m_Metadata:
+      m_Items: []
+  - m_Id: 387853705216
+    m_Key: add_state
+    m_Metadata:
+      m_Items: []
+  - m_Id: 206554914816
+    m_Key: calibrate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 623426789376
+    m_Key: finger_angles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 251232641024
+    m_Key: games
+    m_Metadata:
+      m_Items: []
+  - m_Id: 754599452672
+    m_Key: Index
+    m_Metadata:
+      m_Items: []
+  - m_Id: 140922445824
+    m_Key: "main_menu\t"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 712140513280
+    m_Key: Middle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1448874205184
+    m_Key: thumb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 675473907712
+    m_Key: pinky
+    m_Metadata:
+      m_Items: []
+  - m_Id: 563033006080
+    m_Key: quit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 835675348992
+    m_Key: ring
+    m_Metadata:
+      m_Items: []
+  - m_Id: 293154709504
+    m_Key: settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2707328983040
+    m_Key: current_state
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 1853066540500123672
+  references:
+    version: 2
+    RefIds:
+    - rid: 1853066540500123672
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1715276700677

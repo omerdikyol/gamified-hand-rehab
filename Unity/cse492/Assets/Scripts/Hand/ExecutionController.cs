@@ -86,7 +86,7 @@ public class ExecutionController : MonoBehaviour
     {
         if (playerController != null)
         {
-            if (stateName == "OpenHand" && playerController.IsGrounded())
+            if (stateName == "OpenHand")
             {
                 playerController.Jump();
             }

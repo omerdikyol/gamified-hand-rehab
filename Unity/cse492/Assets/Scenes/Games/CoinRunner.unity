@@ -1575,12 +1575,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8881ba0e10ec2f469a1bebb49b995c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  desiredLane: 1
   laneDistance: 5
   jumpForce: 10
   gravity: -20
   characterMesh: {fileID: 1097954622}
   gameManager: {fileID: 905241447}
-  timeBetweenInputs: 0.5
+  timeBetweenInputs: 1
+  lastInputTime: -1
+  canMove: 1
+  isChangingLanes: 0
 --- !u!1001 &1561282838
 PrefabInstance:
   m_ObjectHideFlags: 0

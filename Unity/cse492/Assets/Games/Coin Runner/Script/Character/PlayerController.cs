@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
     private CharacterController controller;
     private Animator animator;
     private Vector3 direction;
-    private int desiredLane = 1;
+    public int desiredLane = 1;
     public float laneDistance = 4;
     public float jumpForce;
     public float gravity = -20;
@@ -18,7 +18,12 @@ public class PlayerController : MonoBehaviour
     public GameObject characterMesh;
     public GameManagerCoinRunner gameManager;
 
-    public float timeBetweenInputs = 0.5f;
+    public float timeBetweenInputs = 2.0f; // Cooldown time in seconds between movements
+    public float lastInputTime = -2.0f; // Initialize with -2.0 so that player can move immediately at start
+    public bool canMove = true;
+    public bool isChangingLanes = false;
+    private Coroutine currentLaneChangeCoroutine = null; // To manage lane change coroutine
+
 
     private void Start()
     {
@@ -29,48 +34,47 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         direction.y += gravity * Time.deltaTime;
+        if (Time.time - lastInputTime > timeBetweenInputs)
+        {
+            canMove = true;
+            // PlayerMove();
+        }
+
     }
-
-    private void HandlePCInput()
-    {
-        if (Input.GetKeyDown(KeyCode.UpArrow) && IsGrounded())
-        {
-            Jump();
-        }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            Roll();
-        }
-
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            MoveLane(1);
-        }
-
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            MoveLane(-1);
-        }
-    }
-
-    // private void FixedUpdate()
-    // {
-    //     controller.Move(direction * Time.deltaTime);
-    //     PlayerMove();
-    // }
-
-    private float lastInputTime;
 
     private void FixedUpdate()
     {
-        controller.Move(direction * Time.deltaTime);
-
-        if (Time.time - lastInputTime >= timeBetweenInputs)
+        if (!isChangingLanes)
         {
-            PlayerMove();
-            lastInputTime = Time.time;
+            Vector3 moveVector = new Vector3(0, direction.y, direction.z);
+            controller.Move(moveVector * Time.deltaTime);
         }
-    }  
+    }
+
+    // private void PlayerMove()
+    // {
+
+        
+    //     // Vector3 targetPosition = transform.position.z * transform.forward + transform.position.y * transform.up;
+
+    //     // if (desiredLane == 0)
+    //     //     targetPosition += Vector3.left * laneDistance;
+
+    //     // else if (desiredLane == 2)
+    //     //     targetPosition += Vector3.right * laneDistance;
+
+    //     // transform.position = targetPosition;
+
+    //     // Calculate the target position based on the desired lane
+    //     Vector3 targetPosition = controller.transform.position + (desiredLane - 1) * laneDistance * Vector3.right;
+
+    //     // Since only the X position should change, maintain the current Y and Z positions
+    //     targetPosition.y = controller.transform.position.y;
+    //     targetPosition.z = controller.transform.position.z;
+
+    //     // Smooth transition to the target position
+    //     controller.transform.position = Vector3.Lerp(controller.transform.position, targetPosition, Time.deltaTime * 10);
+    // }
 
     private void PlayerMove()
     {
@@ -92,12 +96,20 @@ public class PlayerController : MonoBehaviour
 
     public void Jump()
     {
+        if (!canMove || !IsGrounded()) {return;}
+        canMove = false;
+        lastInputTime = Time.time;
+
         direction.y = jumpForce;
         animator.SetTrigger("Jump");
     }
 
     public void Roll()
     {
+        if (!canMove) return;
+        canMove = false;
+        lastInputTime = Time.time;
+
         if (!IsGrounded())
         {
             direction.y = -jumpForce;
@@ -109,17 +121,53 @@ public class PlayerController : MonoBehaviour
 
     public void MoveLane(int direction)
     {
+        // if (!canMove || isChangingLanes) return;
+        if (!canMove) return;
+        int newLane = desiredLane + direction;
+        if (newLane < 0 || newLane > 2) return; // Prevent invalid lane changes
+
+        if (currentLaneChangeCoroutine != null)
+        {
+            StopCoroutine(currentLaneChangeCoroutine); // Stop the current coroutine if it's running
+        }
+        
+        canMove = false;
+        isChangingLanes = true;
+        lastInputTime = Time.time;
+
         desiredLane += direction;
         desiredLane = Mathf.Clamp(desiredLane, 0, 2);
 
-        if (direction == 1)
+        animator.SetTrigger(direction == 1 ? "Right" : "Left");
+
+        currentLaneChangeCoroutine = StartCoroutine(MoveLaneCoroutine(direction));
+    }
+
+    private IEnumerator MoveLaneCoroutine(int direction)
+    {
+        // Vector3 targetPosition = transform.position + Vector3.right * direction * laneDistance;
+        // while (transform.position != targetPosition)
+        // {
+        //     transform.position = Vector3.MoveTowards(transform.position, targetPosition, 10 * Time.deltaTime);
+        //     yield return null;
+        // }
+
+        if (canMove)
         {
-            animator.SetTrigger("Right");
+            canMove = false;
+            lastInputTime = Time.time;
         }
-        else
+
+        Vector3 targetPosition = controller.transform.position + direction * laneDistance * Vector3.right;
+
+        while (controller.transform.position.x != targetPosition.x)
         {
-            animator.SetTrigger("Left");
+            Vector3 newPosition = Vector3.MoveTowards(controller.transform.position, targetPosition, 10 * Time.deltaTime);
+            controller.Move(newPosition - controller.transform.position);
+            yield return null;
         }
+        isChangingLanes = false;
+        currentLaneChangeCoroutine = null; // Reset coroutine tracker
     }
 
     public void OnRollAnimationFinished()
@@ -160,10 +208,5 @@ public class PlayerController : MonoBehaviour
         }
 
         characterMesh.SetActive(true);
-    }
-
-    private bool IsMobileInput()
-    {
-        return Input.touchCount > 0;
     }
 }
