@@ -35,6 +35,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/AddState.unity
     guid: 68511946dc726ef45a853e834e769d70
+  - enabled: 1
+    path: Assets/Scenes/Settings.unity
+    guid: 3ee0700656833344f84e5a5e631739ab
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 434d565cdbd28cb4aa904cb7e917dd54, type: 2}
     com.unity.localization.settings: {fileID: 11400000, guid: 58a4465b5589a874d9284c5ceca71a9d, type: 2}

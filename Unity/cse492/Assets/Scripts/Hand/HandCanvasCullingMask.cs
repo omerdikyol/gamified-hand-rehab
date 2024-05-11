@@ -8,7 +8,7 @@ using System.Linq;
 public class HandCanvasCullingMask : MonoBehaviour
 {
 
-    int[] canvasNeededScenes = {1,2,3,4,5,6,7,8,9,10};
+    int[] canvasNeededScenes = {1,2,3,4,5,6,7,8,9,10,11,12};
 
     // When entering a new scene, if current scene index is not the given scenes, disable canvas, else enable
     private void OnEnable() {
@@ -29,6 +29,4 @@ public class HandCanvasCullingMask : MonoBehaviour
             }
         }
     }
-
-
 }

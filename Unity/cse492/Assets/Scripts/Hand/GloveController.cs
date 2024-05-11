@@ -109,23 +109,18 @@ public class GloveController : MonoBehaviour
             // Adjust the quaternion by the initial quaternion
             Quaternion correctedQuaternion = Quaternion.Inverse(initialQuaternion) * incomingQuaternion;
 
-            // // Apply the corrected quaternion to the transform
-            // if (QuaternionDifferenceExceedsThreshold(correctedQuaternion, transform.rotation))
-            // {
-            //     transform.rotation = correctedQuaternion;
-            // }
-
-            // Apply the corrected quaternion to the transform if the difference exceeds the threshold
-            if (Math.Abs(newQw - prevQw) > quaternionThreshold 
-                || Math.Abs(newQx - prevQx) > quaternionThreshold 
-                || Math.Abs(newQy - prevQy) > quaternionThreshold 
-                || Math.Abs(newQz - prevQz) > quaternionThreshold)
+            // Apply the corrected quaternion to the transform if the difference exceeds the threshold based on the settings of hand rotation
+            if (SettingsManager.instance == null || SettingsManager.instance.isRotationEnabled)
             {
-                transform.rotation = correctedQuaternion;
+                if (Math.Abs(newQw - prevQw) > quaternionThreshold 
+                    || Math.Abs(newQx - prevQx) > quaternionThreshold 
+                    || Math.Abs(newQy - prevQy) > quaternionThreshold 
+                    || Math.Abs(newQz - prevQz) > quaternionThreshold)
+                {
+                    transform.rotation = correctedQuaternion;
+                }
             }
-
-            // transform.rotation = correctedQuaternion;
-
+            
             // Update previous quaternion values (if needed)
             prevQw = newQw;
             prevQx = newQx;
