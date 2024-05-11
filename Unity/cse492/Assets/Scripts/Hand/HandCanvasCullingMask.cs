@@ -23,6 +23,10 @@ public class HandCanvasCullingMask : MonoBehaviour
                 GetComponent<Canvas>().enabled = false;
             }
         } else {
+            if (GetComponent<Canvas>() == null) {
+                Debug.LogError("Canvas component not found");
+                return;
+            }
             if (!GetComponent<Canvas>().enabled) {
                 Debug.Log("Enabling Canvas");
                 GetComponent<Canvas>().enabled = true;

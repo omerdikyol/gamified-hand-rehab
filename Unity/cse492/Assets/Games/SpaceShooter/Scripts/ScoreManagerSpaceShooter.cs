@@ -18,7 +18,7 @@ public class ScoreManagerSpaceShooter : MonoBehaviour
 
     void Update()
     {
-        text.text = "Score: " + score;
+        text.text = "" + score;  
 
         if(isDead == true)
         {

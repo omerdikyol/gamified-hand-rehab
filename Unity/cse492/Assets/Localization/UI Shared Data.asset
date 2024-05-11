@@ -23,20 +23,120 @@ MonoBehaviour:
     m_Key: add_state
     m_Metadata:
       m_Items: []
+  - m_Id: 694189576806400
+    m_Key: back_to_menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 700891583864832
+    m_Key: bird_jump
+    m_Metadata:
+      m_Items: []
   - m_Id: 206554914816
     m_Key: calibrate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 697132006891520
+    m_Key: calibration_completed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 696881980235776
+    m_Key: calibration_start_part1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 696971960639488
+    m_Key: calibration_start_part2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 696303254364160
+    m_Key: calibration_status
+    m_Metadata:
+      m_Items: []
+  - m_Id: 711678964654080
+    m_Key: coin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 700939193409536
+    m_Key: coin_runner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 713420091547648
+    m_Key: controls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2707328983040
+    m_Key: current_state
+    m_Metadata:
+      m_Items: []
+  - m_Id: 694294786727936
+    m_Key: enter_text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 693418638565376
+    m_Key: enter_the_state_name
     m_Metadata:
       m_Items: []
   - m_Id: 623426789376
     m_Key: finger_angles
     m_Metadata:
       m_Items: []
+  - m_Id: 710908261294080
+    m_Key: game_over
+    m_Metadata:
+      m_Items: []
   - m_Id: 251232641024
     m_Key: games
     m_Metadata:
       m_Items: []
+  - m_Id: 714559881076736
+    m_Key: go_left_runner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 714662347923456
+    m_Key: go_right_runner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 709788084330496
+    m_Key: hand_rotation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 693743776817152
+    m_Key: include_fingers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 693604869857280
+    m_Key: include_quaternion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 693954859360256
+    m_Key: include_qw
+    m_Metadata:
+      m_Items: []
+  - m_Id: 693872395149312
+    m_Key: include_qx
+    m_Metadata:
+      m_Items: []
+  - m_Id: 693948614041600
+    m_Key: include_qy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 693953206804480
+    m_Key: include_qz
+    m_Metadata:
+      m_Items: []
   - m_Id: 754599452672
     m_Key: Index
+    m_Metadata:
+      m_Items: []
+  - m_Id: 713499816878080
+    m_Key: jump_the_bird
+    m_Metadata:
+      m_Items: []
+  - m_Id: 714430772011008
+    m_Key: jump_the_runner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 710363245043712
+    m_Key: language
     m_Metadata:
       m_Items: []
   - m_Id: 140922445824
@@ -47,12 +147,24 @@ MonoBehaviour:
     m_Key: Middle
     m_Metadata:
       m_Items: []
-  - m_Id: 1448874205184
-    m_Key: thumb
+  - m_Id: 714382659149824
+    m_Key: next
     m_Metadata:
       m_Items: []
   - m_Id: 675473907712
     m_Key: pinky
+    m_Metadata:
+      m_Items: []
+  - m_Id: 713266726821888
+    m_Key: play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 710859376680960
+    m_Key: play_again
+    m_Metadata:
+      m_Items: []
+  - m_Id: 714342834233344
+    m_Key: previous
     m_Metadata:
       m_Items: []
   - m_Id: 563033006080
@@ -63,12 +175,80 @@ MonoBehaviour:
     m_Key: ring
     m_Metadata:
       m_Items: []
+  - m_Id: 714805918949376
+    m_Key: roll_runner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 711648912465920
+    m_Key: score
+    m_Metadata:
+      m_Items: []
+  - m_Id: 694095431458816
+    m_Key: select_attributes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 693509222948864
+    m_Key: select_state_attributes
+    m_Metadata:
+      m_Items: []
   - m_Id: 293154709504
     m_Key: settings
     m_Metadata:
       m_Items: []
-  - m_Id: 2707328983040
-    m_Key: current_state
+  - m_Id: 709908242751488
+    m_Key: settings_title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 700976027787264
+    m_Key: space_shooter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 696366735155200
+    m_Key: start_calibration
+    m_Metadata:
+      m_Items: []
+  - m_Id: 713295105482752
+    m_Key: start_game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 700041331335168
+    m_Key: starting_calibration_waiting_for_sensor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 713181402095616
+    m_Key: test_it_here
+    m_Metadata:
+      m_Items: []
+  - m_Id: 709745407287296
+    m_Key: volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 716149862031360
+    m_Key: go_up_shooter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 716159974498304
+    m_Key: go_down_shooter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 716498962341888
+    m_Key: shoot_shooter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 718457505177600
+    m_Key: thumb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 726368990126080
+    m_Key: calibration_finished_your_rom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 727288918433792
+    m_Key: finger_names
+    m_Metadata:
+      m_Items: []
+  - m_Id: 728004328284160
+    m_Key: close
     m_Metadata:
       m_Items: []
   m_Metadata:

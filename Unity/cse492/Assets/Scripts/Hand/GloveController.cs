@@ -49,6 +49,9 @@ public class GloveController : MonoBehaviour
     private readonly object lockObject = new object();
     private readonly object portLock = new object();
 
+    [Header("Localization")]
+    public LocalizationManager localizationManager;
+
     void Start()
     {
         serialPortManager = FindObjectOfType<SerialPortManager>();
@@ -120,7 +123,7 @@ public class GloveController : MonoBehaviour
                     transform.rotation = correctedQuaternion;
                 }
             }
-            
+
             // Update previous quaternion values (if needed)
             prevQw = newQw;
             prevQx = newQx;
@@ -196,13 +199,16 @@ public class GloveController : MonoBehaviour
         // Get Text From Calibration Scene which name is "StatusText"
         TextMeshProUGUI statusText = GameObject.Find("StatusText").GetComponent<TextMeshProUGUI>();
 
-        statusText.text = "Starting calibration. Waiting for sensor initialization...";
+        // Start the calibration process
+        statusText.text = localizationManager.GetLocalizedString("starting_calibration_waiting_for_sensor");
+        // statusText.text = "Starting calibration. Waiting for sensor initialization...";
         Debug.Log("Starting calibration. Waiting for sensor initialization...");
         countdownTimer.SetTime(15f);
         yield return new WaitForSeconds(15f); // Wait for the initial calibration of MPU6050 (can be modified at arduino code maybe)
 
         // Finger calibration is done in two parts: first, the user makes a fist, then opens their hand
-        statusText.text = "Calibration start (Part 1): Make a fist.";
+        statusText.text = localizationManager.GetLocalizedString("calibration_start_part1");
+        // statusText.text = "Calibration start (Part 1): Make a fist.";
         Debug.Log("Calibration start (Part 1): Make a fist.");
         
         countdownTimer.SetTime(10f);
@@ -214,7 +220,8 @@ public class GloveController : MonoBehaviour
 
         countdownTimer.SetTime(10f);
         openHandImage.enabled = true;
-        statusText.text = "Calibration start (Part 2): Open your hand.";
+        statusText.text = localizationManager.GetLocalizedString("calibration_start_part2");
+        // statusText.text = "Calibration start (Part 2): Open your hand.";
         Debug.Log("Calibration start (Part 2): Open your hand.");
         yield return new WaitForSeconds(2f);
         yield return StartCoroutine(ReadFingerCalibrationValues(false)); // false for max values
@@ -230,10 +237,9 @@ public class GloveController : MonoBehaviour
         // Complete the calibration processs
         isCalibrated = true;
         serialPortManager.isCalibrated = true;
-        statusText.text = "Calibration completed.";
+        statusText.text = localizationManager.GetLocalizedString("calibration_completed");
+        // statusText.text = "Calibration completed.";
         Debug.Log("Calibration completed.");
-
-        
     }
 
     private IEnumerator ReadFingerCalibrationValues(bool isReadingMinValues)

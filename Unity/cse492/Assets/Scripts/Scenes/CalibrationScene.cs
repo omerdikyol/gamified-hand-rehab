@@ -52,12 +52,7 @@ public class CalibrationScene : MonoBehaviour
 
             float[] userFingerAngles = CalculateFingerAngles(fingerMinValuesOfUser, fingerMaxValuesOfUser, fingerMinValuesHealty, fingerMaxValuesHealty);
             calibrationFinishedPopUp.SetActive(true);
-            calibrationFinishedPopUpText.text = "Calibration finished! Your Range of Motion for each Finger are:\n\n" +
-                $"Thumb: {userFingerAngles[0]:F2}°\n" +
-                $"Index: {userFingerAngles[1]:F2}°\n" +
-                $"Middle: {userFingerAngles[2]:F2}°\n" +
-                $"Ring: {userFingerAngles[3]:F2}°\n" +
-                $"Pinky: {userFingerAngles[4]:F2}°";
+            calibrationFinishedPopUpText.text = $"{userFingerAngles[0]:F2}°\n{userFingerAngles[1]:F2}°\n{userFingerAngles[2]:F2}°\n{userFingerAngles[3]:F2}°\n{userFingerAngles[4]:F2}°";
             
             isPopUpAppeared = true;
         }

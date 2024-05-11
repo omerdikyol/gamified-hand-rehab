@@ -66,12 +66,217 @@ MonoBehaviour:
     m_Localized: Ring
     m_Metadata:
       m_Items: []
-  - m_Id: 1448874205184
-    m_Localized: Thumb
+  - m_Id: 716149862031360
+    m_Localized: 'Go Up:
+
+      To Go Up , Open your index finger only:'
     m_Metadata:
       m_Items: []
   - m_Id: 2707328983040
     m_Localized: 'Current State:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 693418638565376
+    m_Localized: 'Enter the State Name:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 693509222948864
+    m_Localized: 'Select State Attributes:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 693604869857280
+    m_Localized: IncludeQuaternion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 693743776817152
+    m_Localized: IncludeFingers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 693872395149312
+    m_Localized: IncludeQx
+    m_Metadata:
+      m_Items: []
+  - m_Id: 693948614041600
+    m_Localized: IncludeQy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 693953206804480
+    m_Localized: IncludeQz
+    m_Metadata:
+      m_Items: []
+  - m_Id: 693954859360256
+    m_Localized: IncludeQw
+    m_Metadata:
+      m_Items: []
+  - m_Id: 694095431458816
+    m_Localized: Select Attributes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 694189576806400
+    m_Localized: Back to Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 694294786727936
+    m_Localized: Enter text...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 696303254364160
+    m_Localized: 'Calibration Status:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 696366735155200
+    m_Localized: Start Calibration
+    m_Metadata:
+      m_Items: []
+  - m_Id: 696881980235776
+    m_Localized: 'Calibration start (Part 1): Make a fist.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 696971960639488
+    m_Localized: 'Calibration start (Part 2): Open your hand.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 697132006891520
+    m_Localized: Calibration completed.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 700041331335168
+    m_Localized: Starting calibration. Waiting for sensor initialization...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 700891583864832
+    m_Localized: Bird Jump
+    m_Metadata:
+      m_Items: []
+  - m_Id: 700939193409536
+    m_Localized: Coin Runner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 700976027787264
+    m_Localized: Space Shooter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 709745407287296
+    m_Localized: 'Volume:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 709788084330496
+    m_Localized: 'Hand Rotation:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 709908242751488
+    m_Localized: SETTINGS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 710363245043712
+    m_Localized: 'Language:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 710859376680960
+    m_Localized: Play Again
+    m_Metadata:
+      m_Items: []
+  - m_Id: 710908261294080
+    m_Localized: Game Over
+    m_Metadata:
+      m_Items: []
+  - m_Id: 711648912465920
+    m_Localized: 'Score:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 711678964654080
+    m_Localized: 'Coin:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 713181402095616
+    m_Localized: 'Test It Here:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 713266726821888
+    m_Localized: Play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 713295105482752
+    m_Localized: Start Game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 713420091547648
+    m_Localized: 'Controls:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 713499816878080
+    m_Localized: 'Jump:
+
+      To Jump the Bird, Open all of your fingers:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 714342834233344
+    m_Localized: Previous
+    m_Metadata:
+      m_Items: []
+  - m_Id: 714382659149824
+    m_Localized: Next
+    m_Metadata:
+      m_Items: []
+  - m_Id: 714430772011008
+    m_Localized: 'Jump:
+
+      To Jump, Open all of your fingers:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 714559881076736
+    m_Localized: 'Go Left:
+
+      To Go Left, Open your index finger only:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 714662347923456
+    m_Localized: 'Go Right:
+
+      To Go Right, Open your index and middle finger
+      only:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 714805918949376
+    m_Localized: 'Roll:
+
+      To Roll, Open all of your fingers except your thumb:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 716159974498304
+    m_Localized: 'Go Down:
+
+      To Go Down, Open your index and middle finger only:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 716498962341888
+    m_Localized: 'Shoot:
+
+      To Shoot, Close all of your fingers:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 718457505177600
+    m_Localized: Thumb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 726368990126080
+    m_Localized: 'Calibration finished! Your Range of Motion for each Finger are:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 727288918433792
+    m_Localized: 'Thumb:
+
+      Index:
+
+      Middle:
+
+      Ring:
+
+      Pinky:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 728004328284160
+    m_Localized: Close
     m_Metadata:
       m_Items: []
   references:
