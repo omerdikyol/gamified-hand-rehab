@@ -85,15 +85,15 @@ public class InputController : MonoBehaviour
                 {
                     // Perform action for the matched hand state
                     // Debug.Log("Match with State named: " + state.name);
-                    handStateUIManager.SetCurrentStateName("Current State: " + state.name);
+                    handStateUIManager.SetCurrentStateName(state.name);
 
                     // Execute the action associated with the matched hand state
                     executionController.ExecuteSceneAction(state.name);
                     break;
                 }
-                else 
+                else
                 {
-                    handStateUIManager.SetCurrentStateName("Current State: No match");
+                    handStateUIManager.SetCurrentStateName("-");
                 }
             }
         }

@@ -37,6 +37,7 @@ public class GloveController : MonoBehaviour
     // GUI elements for displaying finger angles
     [Header("GUI Elements")]
     public TextMeshProUGUI[] fingerAngleTexts;
+    public SettingsManager settingsManager;
 
     [Header("Angle Collector")]
     public FingerAngleCollector angleCollector;
@@ -60,6 +61,7 @@ public class GloveController : MonoBehaviour
             Debug.LogError("SerialPortManager not found. Please add SerialPortManager to the scene.");
             return;
         }
+        settingsManager = FindObjectOfType<SettingsManager>();
     }
 
     void Update()
@@ -113,7 +115,7 @@ public class GloveController : MonoBehaviour
             Quaternion correctedQuaternion = Quaternion.Inverse(initialQuaternion) * incomingQuaternion;
 
             // Apply the corrected quaternion to the transform if the difference exceeds the threshold based on the settings of hand rotation
-            if (SettingsManager.instance == null || SettingsManager.instance.isRotationEnabled)
+            if (settingsManager == null || settingsManager.isRotationEnabled)
             {
                 if (Math.Abs(newQw - prevQw) > quaternionThreshold 
                     || Math.Abs(newQx - prevQx) > quaternionThreshold 

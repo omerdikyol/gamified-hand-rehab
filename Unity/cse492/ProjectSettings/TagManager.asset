@@ -13,6 +13,7 @@ TagManager:
   - Hand
   - AttributesUI
   - FingerAngleCollector
+  - SettingsManager
   layers:
   - Default
   - TransparentFX

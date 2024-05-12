@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
+using UnityEngine.UI;
 
 public class SettingsScene : MonoBehaviour
 {
+    public SettingsManager settingsManager;
+
+    public Toggle rotationToggle;
     // Start is called before the first frame update
+
     void Start()
     {
         
@@ -15,7 +20,18 @@ public class SettingsScene : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (settingsManager == null)
+        {
+            try
+            {
+                settingsManager = GameObject.Find("SettingsManager").GetComponent<SettingsManager>();
+                rotationToggle.isOn = settingsManager.isRotationEnabled;
+                rotationToggle.onValueChanged.AddListener((value) => settingsManager.ToggleRotation());
+            }
+            catch (System.Exception)
+            {
+            }
+        }
     }
 
     public void SetLanguage(string localeCode)
