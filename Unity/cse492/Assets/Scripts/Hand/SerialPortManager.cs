@@ -10,7 +10,7 @@ using TMPro;
 public class SerialPortManager : MonoBehaviour
 {
     [Header("Serial Port Settings")]
-    public string portName = "COM3";
+    public string portName = "COM8";
     public int baudRate = 9600;
     private SerialPort serialPort;
     private Thread serialThread;

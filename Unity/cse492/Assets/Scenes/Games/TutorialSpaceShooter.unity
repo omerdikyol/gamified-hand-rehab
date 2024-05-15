@@ -2880,12 +2880,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7077ecbf126069f4ebede830f978dfae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 45
+  speed: 1
   min_Y: -4.2
   max_Y: 4.2
   Player_Bullet: {fileID: 4241977401391443039, guid: 90e8fa0081ea7d44a877cd3ff69e8e01, type: 3}
   attack_Point: {fileID: 4212976046447898897}
   attack_Timer: 1
+  isMoving: 0
 --- !u!1 &4212976046291589628
 GameObject:
   m_ObjectHideFlags: 0

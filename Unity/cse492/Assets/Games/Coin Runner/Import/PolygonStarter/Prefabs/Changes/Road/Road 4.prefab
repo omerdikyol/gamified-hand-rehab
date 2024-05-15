@@ -4531,6 +4531,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: EL-Truck
       objectReference: {fileID: 0}
+    - target: {fileID: 7650697512969106282, guid: 86646ad0b3ded544d9dd5db9436b3714, type: 3}
+      propertyPath: m_Convex
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7650697512969106282, guid: 86646ad0b3ded544d9dd5db9436b3714, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

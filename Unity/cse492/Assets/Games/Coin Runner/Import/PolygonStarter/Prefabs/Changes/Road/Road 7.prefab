@@ -4945,7 +4945,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4660663046619640540, guid: 4af4c5d3e2d649a4db9d97151d1b1e84, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.9
+      value: 0.85
       objectReference: {fileID: 0}
     - target: {fileID: 4660663046619640540, guid: 4af4c5d3e2d649a4db9d97151d1b1e84, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4997,6 +4997,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5320994836665003882}
     m_Modifications:
+    - target: {fileID: 2540442352772859684, guid: af03aad62b2b3414995bf91336103bef, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2737733632613676308, guid: af03aad62b2b3414995bf91336103bef, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3123659718347156834, guid: af03aad62b2b3414995bf91336103bef, type: 3}
       propertyPath: m_Name
       value: Obstacle car 2 walk
@@ -5052,6 +5060,46 @@ PrefabInstance:
     - target: {fileID: 7979709870854896865, guid: af03aad62b2b3414995bf91336103bef, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8677463434583436316, guid: af03aad62b2b3414995bf91336103bef, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.1569638
+      objectReference: {fileID: 0}
+    - target: {fileID: 8677463434583436316, guid: af03aad62b2b3414995bf91336103bef, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.22755261
+      objectReference: {fileID: 0}
+    - target: {fileID: 8677463434583436316, guid: af03aad62b2b3414995bf91336103bef, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 23.44557
+      objectReference: {fileID: 0}
+    - target: {fileID: 8677463434583436316, guid: af03aad62b2b3414995bf91336103bef, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9865613
+      objectReference: {fileID: 0}
+    - target: {fileID: 8677463434583436316, guid: af03aad62b2b3414995bf91336103bef, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.16239832
+      objectReference: {fileID: 0}
+    - target: {fileID: 8677463434583436316, guid: af03aad62b2b3414995bf91336103bef, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.009925164
+      objectReference: {fileID: 0}
+    - target: {fileID: 8677463434583436316, guid: af03aad62b2b3414995bf91336103bef, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.015006294
+      objectReference: {fileID: 0}
+    - target: {fileID: 8677463434583436316, guid: af03aad62b2b3414995bf91336103bef, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 18.707
+      objectReference: {fileID: 0}
+    - target: {fileID: 8677463434583436316, guid: af03aad62b2b3414995bf91336103bef, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0.89
+      objectReference: {fileID: 0}
+    - target: {fileID: 8677463434583436316, guid: af03aad62b2b3414995bf91336103bef, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -1.596
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

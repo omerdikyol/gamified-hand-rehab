@@ -1835,8 +1835,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1403218520}
         m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 3
+        m_MethodName: QuitGame
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2276,6 +2276,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 704404783416665851, guid: 670f882666e26eb4887797da7953cb38, type: 3}
+      propertyPath: portName
+      value: COM3
+      objectReference: {fileID: 0}
     - target: {fileID: 745825224978520029, guid: 670f882666e26eb4887797da7953cb38, type: 3}
       propertyPath: m_Name
       value: CurrentStateLabel
@@ -2303,6 +2307,10 @@ PrefabInstance:
     - target: {fileID: 4040720107088102208, guid: 670f882666e26eb4887797da7953cb38, type: 3}
       propertyPath: m_Name
       value: Necessary
+      objectReference: {fileID: 0}
+    - target: {fileID: 4051487770580019116, guid: 670f882666e26eb4887797da7953cb38, type: 3}
+      propertyPath: fingerThreshold
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6178259151517423135, guid: 670f882666e26eb4887797da7953cb38, type: 3}
       propertyPath: m_LocalPosition.y

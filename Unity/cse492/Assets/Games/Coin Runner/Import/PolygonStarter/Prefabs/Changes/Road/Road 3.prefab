@@ -3649,9 +3649,53 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2124830452120639608}
     m_Modifications:
+    - target: {fileID: 382564088188708831, guid: be38e5d8aa64e5b4287313bfb128b13e, type: 3}
+      propertyPath: m_Size.x
+      value: 0.8154295
+      objectReference: {fileID: 0}
+    - target: {fileID: 382564088188708831, guid: be38e5d8aa64e5b4287313bfb128b13e, type: 3}
+      propertyPath: m_Size.y
+      value: 2.9913943
+      objectReference: {fileID: 0}
+    - target: {fileID: 382564088188708831, guid: be38e5d8aa64e5b4287313bfb128b13e, type: 3}
+      propertyPath: m_Center.x
+      value: -0.22939454
+      objectReference: {fileID: 0}
+    - target: {fileID: 382564088188708831, guid: be38e5d8aa64e5b4287313bfb128b13e, type: 3}
+      propertyPath: m_Center.y
+      value: 1.5206531
+      objectReference: {fileID: 0}
     - target: {fileID: 3277512071090292887, guid: be38e5d8aa64e5b4287313bfb128b13e, type: 3}
       propertyPath: m_Name
       value: Obstacle Door
+      objectReference: {fileID: 0}
+    - target: {fileID: 4672411717440650803, guid: be38e5d8aa64e5b4287313bfb128b13e, type: 3}
+      propertyPath: m_Size.x
+      value: 0.705239
+      objectReference: {fileID: 0}
+    - target: {fileID: 4672411717440650803, guid: be38e5d8aa64e5b4287313bfb128b13e, type: 3}
+      propertyPath: m_Size.y
+      value: 3.0717173
+      objectReference: {fileID: 0}
+    - target: {fileID: 4672411717440650803, guid: be38e5d8aa64e5b4287313bfb128b13e, type: 3}
+      propertyPath: m_Center.x
+      value: 2.0253248
+      objectReference: {fileID: 0}
+    - target: {fileID: 4672411717440650803, guid: be38e5d8aa64e5b4287313bfb128b13e, type: 3}
+      propertyPath: m_Center.y
+      value: 1.5608149
+      objectReference: {fileID: 0}
+    - target: {fileID: 7710012792104014999, guid: be38e5d8aa64e5b4287313bfb128b13e, type: 3}
+      propertyPath: m_Size.x
+      value: 1.9059237
+      objectReference: {fileID: 0}
+    - target: {fileID: 7710012792104014999, guid: be38e5d8aa64e5b4287313bfb128b13e, type: 3}
+      propertyPath: m_Size.y
+      value: 1.2204465
+      objectReference: {fileID: 0}
+    - target: {fileID: 7710012792104014999, guid: be38e5d8aa64e5b4287313bfb128b13e, type: 3}
+      propertyPath: m_Center.y
+      value: 3.774955
       objectReference: {fileID: 0}
     - target: {fileID: 8009655625060005161, guid: be38e5d8aa64e5b4287313bfb128b13e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3692,6 +3736,26 @@ PrefabInstance:
     - target: {fileID: 8009655625060005161, guid: be38e5d8aa64e5b4287313bfb128b13e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8656466743118053619, guid: be38e5d8aa64e5b4287313bfb128b13e, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8656466743118053619, guid: be38e5d8aa64e5b4287313bfb128b13e, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8656466743118053619, guid: be38e5d8aa64e5b4287313bfb128b13e, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8656466743118053619, guid: be38e5d8aa64e5b4287313bfb128b13e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.58
+      objectReference: {fileID: 0}
+    - target: {fileID: 8656466743118053619, guid: be38e5d8aa64e5b4287313bfb128b13e, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -14,4 +14,9 @@ public class MainMenu : MonoBehaviour
     public void Resume(){
         Time.timeScale = 1f;
     }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 }

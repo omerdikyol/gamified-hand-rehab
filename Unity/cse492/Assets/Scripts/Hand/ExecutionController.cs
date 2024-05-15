@@ -113,17 +113,21 @@ public class ExecutionController : MonoBehaviour
     {
         if (playerControllerSpaceShooter != null)
         {
-            if (stateName == "Fist")
+            switch (stateName)
             {
-                playerControllerSpaceShooter.Shoot();
-            }
-            else if (stateName == "IndexFinger")
-            {
-                playerControllerSpaceShooter.MoveUp();
-            }
-            else if (stateName == "IndexAndMiddleFinger")
-            {
-                playerControllerSpaceShooter.MoveDown();
+                case "Fist":
+                    playerControllerSpaceShooter.Shoot();
+                    playerControllerSpaceShooter.StopMoving();
+                    break;
+                case "IndexFinger":
+                    playerControllerSpaceShooter.StartMoving(1);
+                    break;
+                case "IndexAndMiddleFinger":
+                    playerControllerSpaceShooter.StartMoving(-1);
+                    break;
+                default:
+                    playerControllerSpaceShooter.StopMoving();
+                    break;
             }
         }
     }

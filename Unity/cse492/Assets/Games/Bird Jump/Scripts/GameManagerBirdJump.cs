@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
         playButton.SetActive(false);
         gameOver.SetActive(false);
 
-        Time.timeScale = 1f;
+        Time.timeScale = 0.7f;
         player.enabled = true;
 
         Pipes[] pipes = FindObjectsOfType<Pipes>();

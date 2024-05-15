@@ -28,7 +28,7 @@ public class InputController : MonoBehaviour
 
     [Header("Thresholds")]
     public float quaternionThreshold = 0.05f; // Threshold for comparing quaternion values
-    public float fingerThreshold = 15f; // Threshold for comparing finger values
+    public float fingerThreshold = 20f; // Threshold for comparing finger values
     public float minMaxThreshold = 25f; // Threshold for checking if a finger value is near the min or max value
 
     public float checkInterval = 0.2f; // Check every 0.2 seconds

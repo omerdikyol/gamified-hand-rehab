@@ -33,6 +33,7 @@ public class GloveController : MonoBehaviour
     private float[] fingerNormalizedValuesForModel = new float[5]; // Normalized finger values for hand model
     private float[] fingerNormalizedValuesForAngleCollector = new float[5]; // Normalized finger values for angle collector
     private float[] fingerAngles = new float[5]; // Store the angles of the fingers
+    private bool isAnglesReversed = false; // Track if the finger angles are reversed
 
     // GUI elements for displaying finger angles
     [Header("GUI Elements")]
@@ -136,8 +137,16 @@ public class GloveController : MonoBehaviour
             for (int i = 0; i < 5; i++)
             {
                 float rawValue = float.Parse(values[4 + i]);
-                // float normalizedValue = MapValueToRange(float.Parse(values[4 + i]), fingerMinValues[i], fingerMaxValues[i], 85, 5); // With calibration
-                float normalizedValue = 100 - Mathf.Clamp((rawValue - fingerMinValues[i]) / (fingerMaxValues[i] - fingerMinValues[i]) * 100, 0, 100);
+                float normalizedValue = 0f;
+                if (!isAnglesReversed)
+                {
+                    normalizedValue = 100 - Mathf.Clamp((rawValue - fingerMinValues[i]) / (fingerMaxValues[i] - fingerMinValues[i]) * 100, 0, 100);
+                }
+                else
+                {
+                    normalizedValue = Mathf.Clamp((rawValue - fingerMinValues[i]) / (fingerMaxValues[i] - fingerMinValues[i]) * 100, 0, 100);
+                }
+                
                 outputValues[i] = normalizedValue;
                 // Debug.Log("Finger " + i + " value: " + normalizedValue);
                 if (applyToModel)
@@ -233,6 +242,15 @@ public class GloveController : MonoBehaviour
         // Optionally, log the min and max values for each finger
         for (int i = 0; i < 5; i++)
         {
+            if (fingerMinValuesOfUser[i] > fingerMaxValuesOfUser[i])
+            {
+                // Swap the values if the min value is greater than the max value
+                float temp = fingerMinValuesOfUser[i];
+                fingerMinValuesOfUser[i] = fingerMaxValuesOfUser[i];
+                fingerMaxValuesOfUser[i] = temp;
+                isAnglesReversed = true;
+            }
+
             Debug.Log($"Finger {i} min: {fingerMinValuesOfUser[i]}, max: {fingerMaxValuesOfUser[i]}");
         }
 

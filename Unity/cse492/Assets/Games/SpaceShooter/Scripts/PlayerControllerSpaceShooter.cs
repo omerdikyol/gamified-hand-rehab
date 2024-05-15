@@ -1,18 +1,14 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerControllerSpaceShooter : MonoBehaviour
 {
-    public float speed = 30f;
-
+    public float speed = 1f;
     public float min_Y, max_Y;
 
-    [SerializeField]
-    private GameObject Player_Bullet;
+    [SerializeField] private GameObject Player_Bullet;
 
-    [SerializeField]
-    private Transform attack_Point;
+    [SerializeField] private Transform attack_Point;
 
     public float attack_Timer = 1f;
     private float current_Attack_Timer;
@@ -20,18 +16,19 @@ public class PlayerControllerSpaceShooter : MonoBehaviour
 
     private AudioSource laserAudio;
 
+    private Coroutine currentMoveCoroutine;
+    [SerializeField] private bool isMoving = false;
+
     void Awake()
     {
         laserAudio = GetComponent<AudioSource>();
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         current_Attack_Timer = attack_Timer;
     }
 
-    // Update is called once per frame
     void Update()
     {
         attack_Timer += Time.deltaTime;
@@ -41,37 +38,60 @@ public class PlayerControllerSpaceShooter : MonoBehaviour
         }
     }
 
-    public void MoveUp()
+    public void StartMoving(int direction)
     {
-        Vector3 temp = transform.position;
-        temp.y += speed * Time.deltaTime;
-
-        if(temp.y > max_Y)
-            temp.y = max_Y;
-
-        transform.position = temp;
+        if (isMoving)
+        {
+            if (transform.position.y >= max_Y && direction > 0 || transform.position.y <= min_Y && direction < 0)
+            {
+                StopMoving();
+                return;
+            }
+        }
+        
+        isMoving = true;
+        currentMoveCoroutine = StartCoroutine(MoveContinuously(direction));
     }
 
-    public void MoveDown()
+    public void StopMoving()
     {
-        Vector3 temp = transform.position;
-        temp.y -= speed * Time.deltaTime;
+        if (!isMoving) return;
 
-        if(temp.y < min_Y)
-            temp.y = min_Y;
-        
-        transform.position = temp;
+        isMoving = false;
+        if (currentMoveCoroutine != null)
+        {
+            StopCoroutine(currentMoveCoroutine);
+            // Stop the current momentum
+            transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        }
+    }
+
+    private IEnumerator MoveContinuously(int direction)
+    {
+        while (isMoving)
+        {
+            Vector3 temp = transform.position;
+            temp.y += direction * speed * Time.deltaTime;
+
+            if (temp.y > max_Y)
+                temp.y = max_Y;
+            else if (temp.y < min_Y)
+                temp.y = min_Y;
+
+            transform.position = temp;
+            yield return null;
+        }
     }
 
     public void Shoot()
     {
-        if(attack_On)
+        if (attack_On)
         {
             attack_On = false;
             attack_Timer = 0f;
             Instantiate(Player_Bullet, attack_Point.position, Quaternion.identity);
 
-            //play sound FX
+            // play sound FX
             laserAudio.Play();
         }
     }

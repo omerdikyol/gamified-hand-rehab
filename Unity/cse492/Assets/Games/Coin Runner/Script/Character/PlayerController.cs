@@ -51,31 +51,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // private void PlayerMove()
-    // {
-
-        
-    //     // Vector3 targetPosition = transform.position.z * transform.forward + transform.position.y * transform.up;
-
-    //     // if (desiredLane == 0)
-    //     //     targetPosition += Vector3.left * laneDistance;
-
-    //     // else if (desiredLane == 2)
-    //     //     targetPosition += Vector3.right * laneDistance;
-
-    //     // transform.position = targetPosition;
-
-    //     // Calculate the target position based on the desired lane
-    //     Vector3 targetPosition = controller.transform.position + (desiredLane - 1) * laneDistance * Vector3.right;
-
-    //     // Since only the X position should change, maintain the current Y and Z positions
-    //     targetPosition.y = controller.transform.position.y;
-    //     targetPosition.z = controller.transform.position.z;
-
-    //     // Smooth transition to the target position
-    //     controller.transform.position = Vector3.Lerp(controller.transform.position, targetPosition, Time.deltaTime * 10);
-    // }
-
     private void PlayerMove()
     {
         Vector3 targetPosition = transform.position.z * transform.forward + transform.position.y * transform.up;
@@ -145,13 +120,6 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator MoveLaneCoroutine(int direction)
     {
-        // Vector3 targetPosition = transform.position + Vector3.right * direction * laneDistance;
-        // while (transform.position != targetPosition)
-        // {
-        //     transform.position = Vector3.MoveTowards(transform.position, targetPosition, 10 * Time.deltaTime);
-        //     yield return null;
-        // }
-
         if (canMove)
         {
             canMove = false;

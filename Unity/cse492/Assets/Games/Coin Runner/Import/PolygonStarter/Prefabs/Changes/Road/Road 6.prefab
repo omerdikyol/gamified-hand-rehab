@@ -5012,6 +5012,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5237170728688446055}
     m_Modifications:
+    - target: {fileID: 2532065616399868248, guid: ed102355112734f4ea2d7244513ee984, type: 3}
+      propertyPath: m_Size.x
+      value: 8.365228
+      objectReference: {fileID: 0}
+    - target: {fileID: 2532065616399868248, guid: ed102355112734f4ea2d7244513ee984, type: 3}
+      propertyPath: m_Center.x
+      value: -1.7256864
+      objectReference: {fileID: 0}
     - target: {fileID: 6610857344632882546, guid: ed102355112734f4ea2d7244513ee984, type: 3}
       propertyPath: m_Name
       value: Obstacle Airplane
