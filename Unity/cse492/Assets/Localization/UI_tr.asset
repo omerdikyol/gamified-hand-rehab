@@ -170,7 +170,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 710363245043712
-    m_Localized: Dil
+    m_Localized: 'Dil:'
     m_Metadata:
       m_Items: []
   - m_Id: 710859376680960
@@ -263,6 +263,21 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 728004328284160
     m_Localized: Kapat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2446243283329024
+    m_Localized: "Hareketleri Ters \xC7evir:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3164055550517248
+    m_Localized: "Bu proje, yenilik\xE7i donan\u0131m\u0131 ve ilgi \xE7ekici yaz\u0131l\u0131m\u0131
+      birle\u015Ftirerek geleneksel el rehabilitasyon terapisinde devrim yaratmay\u0131
+      ama\xE7lamaktad\u0131r. Arduino teknolojisini sens\xF6rlerle donat\u0131lm\u0131\u015F
+      bir eldivene entegre ederek, sistem el hareketlerini izler ve Unity Engine'de
+      geli\u015Ftirilen etkile\u015Fimli oyunlara d\xF6n\xFC\u015Ft\xFCr\xFCr. Bu
+      oyunla\u015Ft\u0131r\u0131lm\u0131\u015F yakla\u015F\u0131m, kullan\u0131c\u0131n\u0131n
+      kat\u0131l\u0131m\u0131n\u0131 ve terapi protokollerine ba\u011Fl\u0131l\u0131\u011F\u0131n\u0131
+      art\u0131rarak rehabilitasyon egzersizlerini daha keyifli ve etkili hale getirir. "
     m_Metadata:
       m_Items: []
   references:

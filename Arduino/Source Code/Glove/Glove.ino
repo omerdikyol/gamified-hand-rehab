@@ -1,5 +1,3 @@
-// For USB connection 
-
 #include <Wire.h>
 #include "I2Cdev.h"
 #include "MPU6050_6Axis_MotionApps20.h"
@@ -30,11 +28,10 @@ void setup() {
 
   devStatus = accelgyro.dmpInitialize();
 
-  // supply your own gyro offsets here, scaled for min sensitivity
   accelgyro.setXGyroOffset(220);
   accelgyro.setYGyroOffset(76);
   accelgyro.setZGyroOffset(-85);
-  accelgyro.setZAccelOffset(2000); // 1688 factory default for my test chip
+  accelgyro.setZAccelOffset(2000);
 
   // make sure it worked (returns 0 if so)
   if (devStatus == 0) {
@@ -89,7 +86,3 @@ void loop() {
 
   delay(100); // Delay before the next reading
 }
-
-// For Bluetooth Connection
-
-// Coming soon..

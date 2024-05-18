@@ -279,6 +279,19 @@ MonoBehaviour:
     m_Localized: Close
     m_Metadata:
       m_Items: []
+  - m_Id: 2446243283329024
+    m_Localized: 'Reverse Movement:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3164055550517248
+    m_Localized: 'This project aims to revolutionize traditional hand rehabilitation
+      therapy by combining innovative hardware and engaging software. By integrating
+      Arduino technology into a glove equipped with sensors, the system tracks hand
+      movements and translates them into interactive games developed in the Unity
+      Engine. This gamified approach enhances user  engagement and adherence to therapy
+      protocols, making rehabilitation exercises more enjoyable and effective. '
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

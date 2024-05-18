@@ -251,6 +251,14 @@ MonoBehaviour:
     m_Key: close
     m_Metadata:
       m_Items: []
+  - m_Id: 2446243283329024
+    m_Key: reverse_movement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3164055550517248
+    m_Key: about_text
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -33,7 +33,7 @@ public class GloveController : MonoBehaviour
     private float[] fingerNormalizedValuesForModel = new float[5]; // Normalized finger values for hand model
     private float[] fingerNormalizedValuesForAngleCollector = new float[5]; // Normalized finger values for angle collector
     private float[] fingerAngles = new float[5]; // Store the angles of the fingers
-    private bool isAnglesReversed = false; // Track if the finger angles are reversed
+    public bool isAnglesReversed = false; // Track if the finger angles are reversed
 
     // GUI elements for displaying finger angles
     [Header("GUI Elements")]
@@ -377,6 +377,11 @@ public class GloveController : MonoBehaviour
 
         // Log the angles for debugging purposes
         // Debug.Log($"Angles - Thumb: {fingerAngles[0]:F2}, Index: {fingerAngles[1]:F2}, Middle: {fingerAngles[2]:F2}, Ring: {fingerAngles[3]:F2}, Pinky: {fingerAngles[4]:F2}");
+    }
+
+    public void ToggleAnglesReversed()
+    {
+        isAnglesReversed = !isAnglesReversed;
     }
 
     public bool GetIsCalibrated()

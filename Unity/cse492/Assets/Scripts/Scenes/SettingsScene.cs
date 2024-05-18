@@ -8,8 +8,10 @@ using UnityEngine.UI;
 public class SettingsScene : MonoBehaviour
 {
     public SettingsManager settingsManager;
+    public GloveController gloveController;
 
     public Toggle rotationToggle;
+    public Toggle reverseToggle;
     // Start is called before the first frame update
 
     void Start()
@@ -27,6 +29,18 @@ public class SettingsScene : MonoBehaviour
                 settingsManager = GameObject.Find("SettingsManager").GetComponent<SettingsManager>();
                 rotationToggle.isOn = settingsManager.isRotationEnabled;
                 rotationToggle.onValueChanged.AddListener((value) => settingsManager.ToggleRotation());
+            }
+            catch (System.Exception)
+            {
+            }
+        }
+        if (gloveController == null)
+        {
+            try
+            {
+                gloveController = GameObject.Find("HandRight").GetComponent<GloveController>();
+                reverseToggle.isOn = gloveController.isAnglesReversed;
+                reverseToggle.onValueChanged.AddListener((value) => gloveController.ToggleAnglesReversed());
             }
             catch (System.Exception)
             {

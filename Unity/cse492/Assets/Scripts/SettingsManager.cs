@@ -50,7 +50,7 @@ public class SettingsManager : MonoBehaviour
         isRotationEnabled = !isRotationEnabled;
         if (handModel != null && !isRotationEnabled)
         {
-            handModel.transform.rotation = Quaternion.Euler(isRotationEnabled ? 0f : 70f, 18f, 0f);
+            handModel.transform.rotation = Quaternion.Euler(isRotationEnabled ? 0f : 70f, 182f, 0f);
         }
     }
 }
