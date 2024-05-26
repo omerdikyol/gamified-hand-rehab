@@ -3016,8 +3016,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 704404783416665851, guid: 670f882666e26eb4887797da7953cb38, type: 3}
+      propertyPath: baudRate
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 704404783416665851, guid: 670f882666e26eb4887797da7953cb38, type: 3}
       propertyPath: portName
-      value: COM3
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 745825224978520029, guid: 670f882666e26eb4887797da7953cb38, type: 3}
       propertyPath: m_Name

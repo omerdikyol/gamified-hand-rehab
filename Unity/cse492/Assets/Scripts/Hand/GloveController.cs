@@ -79,8 +79,18 @@ public class GloveController : MonoBehaviour
                     // Log the data for the angle collector but normalize the finger angles based on the ROM and calibration values of a healthy hand first
                     float[] fingerAnglesOfModel = CalculateFingerAngles(fingerNormalizedValuesForModel);
                     float[] fingerAnglesOfHand = CalculateFingerAngles(fingerNormalizedValuesForAngleCollector);
-                    angleCollector.LogData(fingerAnglesOfModel, fingerAnglesOfHand);
 
+                    // Reverse the angles before saving to csv file if needed
+                    if (isAnglesReversed)
+                    {
+                        // Reverse the angles based on the maximum ROM values
+                        float[] maxROM = new float[] { 60, 90, 90, 90, 90 };
+                        for (int i = 0; i < 5; i++)
+                        {
+                            fingerAnglesOfHand[i] = maxROM[i] - fingerAnglesOfHand[i];
+                        }
+                    }
+                    
                     // Update the finger angles on the GUI
                     UpdateFingerAnglesGUI(fingerAnglesOfModel);
                 }

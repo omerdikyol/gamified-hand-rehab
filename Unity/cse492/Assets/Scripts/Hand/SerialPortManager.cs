@@ -1,17 +1,24 @@
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
+using System.IO;
 using System.IO.Ports;
 using System.Threading;
 using UnityEngine;
 using TMPro;
 
+[Serializable]
+public class SerialPortConfig
+{
+    public string portName;
+    public int baudRate;
+}
 
 public class SerialPortManager : MonoBehaviour
 {
     [Header("Serial Port Settings")]
-    public string portName = "COM3";
-    public int baudRate = 115200;
+    public string portName = "COM3"; // Default port name
+    public int baudRate = 115200; // Default baud rate
     private SerialPort serialPort;
     private Thread serialThread;
     private bool isRunning = true;
@@ -22,8 +29,42 @@ public class SerialPortManager : MonoBehaviour
 
     void Start()
     {
+        LoadConfig();
         OpenSerialPort();
         StartSerialThread();
+    }
+
+    void LoadConfig()
+    {
+        string configPath = Path.Combine(Application.persistentDataPath, "SerialPortConfig.json");
+
+        // Check if the file exists in persistent data path
+        if (!File.Exists(configPath))
+        {
+            // If not, create a new config file with default values
+            SerialPortConfig config = new SerialPortConfig
+            {
+                portName = portName,
+                baudRate = baudRate
+            };
+            string configJson = JsonUtility.ToJson(config, true);
+            File.WriteAllText(configPath, configJson);
+            Debug.Log($"Created config file: {configPath}");
+        }
+
+        // Read and parse the config file from persistent data path
+        try
+        {
+            string configJson = File.ReadAllText(configPath);
+            SerialPortConfig config = JsonUtility.FromJson<SerialPortConfig>(configJson);
+            portName = config.portName;
+            baudRate = config.baudRate;
+            Debug.Log($"Loaded config: portName={portName}, baudRate={baudRate}");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Failed to read config: {ex.Message}");
+        }
     }
 
     void OpenSerialPort()
