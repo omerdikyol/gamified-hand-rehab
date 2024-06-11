@@ -185,26 +185,6 @@ public class InputController : MonoBehaviour
             {
                 handStateCollection = new HandStateCollection(); // Initialize to prevent null reference
             }
-            // Debug.Log("Hand states loaded from " + filePath);
-            // Debug.Log("Number of hand states: " + handStateCollection.handStates.Count);
-            // // Print the loaded hand states
-            // foreach (HandState state in handStateCollection.handStates)
-            // {
-            //     Debug.Log("Name: " + state.name);
-            //     Debug.Log("Quaternion: ");
-            //     for (int i = 0; i < state.quaternionValues.Length; i++)
-            //     {
-            //         Debug.Log(state.quaternionValues[i]);
-            //     }
-            //     Debug.Log("Fingers: ");
-            //     for (int i = 0; i < state.fingerValues.Length; i++)
-            //     {
-            //         Debug.Log(state.fingerValues[i]);
-            //     }
-            //     Debug.Log("Includes Quaternion: " + state.includesQuaternion);
-            //     Debug.Log("Includes Fingers: " + state.includesFingers);
-            //     Debug.Log("Included Quaternion Components: " + state.includedQuaternionComponents);
-            // }
         }
         else
         {
@@ -212,9 +192,4 @@ public class InputController : MonoBehaviour
             Debug.Log("No saved hand states found.");
         }
     }
-
-    // public void SetIsAttributesEntered(bool value)
-    // {
-    //     isAttributesEntered = value;
-    // }
 }

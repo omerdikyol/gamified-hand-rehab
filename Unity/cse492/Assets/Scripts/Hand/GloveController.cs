@@ -90,6 +90,8 @@ public class GloveController : MonoBehaviour
                             fingerAnglesOfHand[i] = maxROM[i] - fingerAnglesOfHand[i];
                         }
                     }
+
+                    angleCollector.LogData(fingerAnglesOfModel, fingerAnglesOfHand);
                     
                     // Update the finger angles on the GUI
                     UpdateFingerAnglesGUI(fingerAnglesOfModel);

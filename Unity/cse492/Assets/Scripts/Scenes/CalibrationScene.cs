@@ -51,8 +51,9 @@ public class CalibrationScene : MonoBehaviour
             float[] fingerMaxValuesHealty = gloveController.GetFingerMaxValuesHealthy();
 
             float[] userFingerAngles = CalculateFingerAngles(fingerMinValuesOfUser, fingerMaxValuesOfUser, fingerMinValuesHealty, fingerMaxValuesHealty);
-            calibrationFinishedPopUp.SetActive(true);
-            calibrationFinishedPopUpText.text = $"{userFingerAngles[0]:F2}°\n{userFingerAngles[1]:F2}°\n{userFingerAngles[2]:F2}°\n{userFingerAngles[3]:F2}°\n{userFingerAngles[4]:F2}°";
+            // Disabled feature (Reslts are not consistent to be used)
+            // calibrationFinishedPopUp.SetActive(true);
+            // calibrationFinishedPopUpText.text = $"{userFingerAngles[0]:F2}°\n{userFingerAngles[1]:F2}°\n{userFingerAngles[2]:F2}°\n{userFingerAngles[3]:F2}°\n{userFingerAngles[4]:F2}°";
             
             isPopUpAppeared = true;
         }
@@ -60,7 +61,8 @@ public class CalibrationScene : MonoBehaviour
 
     public void CloseCalibrationFinishedPopUp()
     {
-        calibrationFinishedPopUp.SetActive(false);
+        // Disabled feature (Reslts are not consistent to be used)
+        // calibrationFinishedPopUp.SetActive(false);
     }
 
     
