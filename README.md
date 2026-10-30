@@ -1,4 +1,11 @@
-# Gamified hand rehabilitation
+<h1 align="center">Gamified hand rehabilitation</h1>
+
+<p align="center">
+  <img alt="hardware: Arduino" src="https://img.shields.io/badge/hardware-Arduino-00979D">
+  <img alt="Unity: 2022.3.20f1" src="https://img.shields.io/badge/Unity-2022.3.20f1-black">
+  <img alt="status: research prototype" src="https://img.shields.io/badge/status-research%20prototype-yellow">
+  <img alt="license: MIT" src="https://img.shields.io/badge/license-MIT-green">
+</p>
 
 An Arduino glove connected to Unity games through USB serial input. Finger potentiometers and an MPU6050 provide hand measurements; calibration and gesture handling turn those readings into game interactions.
 
